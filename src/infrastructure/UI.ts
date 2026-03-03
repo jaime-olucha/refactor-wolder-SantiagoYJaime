@@ -37,7 +37,20 @@ export class UI implements IGameUI {
 
     changeKeyState(key: string, state: LetterState): void {
         const button = document.querySelector(`.key[value="${key}"]`) as HTMLButtonElement | null;
-        if (button) this.setElementState(button, state);
+        if (!button) return;
+
+        const classCorrect = UI_CONFIG.CSS_CLASSES[LetterState.CORRECT];
+        const classPresent = UI_CONFIG.CSS_CLASSES[LetterState.PRESENT];
+
+        if (button.classList.contains(classCorrect)) {
+            return; 
+        }
+
+        if (button.classList.contains(classPresent) && state !== LetterState.CORRECT) {
+            return;
+        }
+        
+        this.setElementState(button, state);
     }
 
     onGameOver(state: GameState): void {
