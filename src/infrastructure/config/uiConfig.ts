@@ -11,7 +11,11 @@ export const UI_CONFIG = {
     ROUTES: {
         WON: '/winner',
         LOST: '/loser'
-    } as Partial<Record<GameState, string>>
+    } as Partial<Record<GameState, string>>,
+
+    SELECTORS: {
+        VIRTUAL_KEY: '.key'
+    }
 };
 
 export const ALL_STATE_CLASSES = Object.values(UI_CONFIG.CSS_CLASSES).filter(cssClass => cssClass !== '');
