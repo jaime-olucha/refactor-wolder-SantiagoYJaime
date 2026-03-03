@@ -1,6 +1,12 @@
-export const MAX_WORD_SIZE:number = 5;
-export const MAX_ATTEMPTS:number = 6;
-export const VALID_KEYS: string[] = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N','Ñ','O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z'];
+export const MAX_WORD_SIZE = 5;
+export const MAX_ATTEMPTS = 6;
+
+export const VALID_KEYS: string[] = [
+    'A', 'B', 'C', 'D', 'E', 'F', 'G',
+    'H', 'I', 'J', 'K', 'L', 'M', 'N',
+    'Ñ', 'O', 'P', 'Q', 'R', 'S', 'T',
+    'U', 'V', 'W', 'X', 'Y', 'Z'
+];
 
 
 // Se exportan las constantes para que puedan ser utilizadas en otros archivos del proyecto, como en Game.ts e Interface.ts.
