@@ -4,9 +4,11 @@ import { UI } from "./infrastructure/UI.js";
 import { InputManager } from "./infrastructure/InputManager.js";
 import { VALID_KEYS, COMMANDS, WORDS_DB } from "./shared/constants.js";
 
-// 1. Inicialización de dependencias
 const wordProvider = new WordProvider(WORDS_DB);
 const pickedWord: string = wordProvider.getRandomWord();
+console.log(pickedWord);
+
+
 const ui = new UI();
 const game = new Game(pickedWord, ui);
 
