@@ -1,4 +1,6 @@
-export class WordProvider {
+import { IWordProvider } from "../shared/IWordProvider";
+
+export class WordProvider implements IWordProvider {
     constructor(private readonly words: string[]) {}
     /**
      * Retorna una palabra aleatoria del listado disponible.
