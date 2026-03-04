@@ -37,27 +37,27 @@ export class UI implements IGameUI {
         this.setElementState(button, state);
     }
 
-    onGameOver(state: GameState): void {
+    onGameOver(state: GameState, secretWord: string): void {
         const modal = this.getModalElement();
         const headerElement = document.querySelector(UI_CONFIG.SELECTORS.MODAL_HEADER) as HTMLElement | null;
         const messageElement = document.querySelector(UI_CONFIG.SELECTORS.MODAL_MESSAGE) as HTMLElement | null;
+        const secretWordElement = document.querySelector(UI_CONFIG.SELECTORS.MODAL_SECRET_WORD) as HTMLElement | null;
 
         const message = UI_CONFIG.MODAL.MESSAGES[state];
 
-        if (modal && messageElement && headerElement && message) {
-            messageElement.textContent = message;
+        if (!modal || !messageElement || !headerElement || !message) return;
 
-            headerElement.classList.remove(UI_CONFIG.MODAL.CLASSES.HEADER_WON, UI_CONFIG.MODAL.CLASSES.HEADER_LOST);
+        messageElement.textContent = message;
+        if (secretWordElement) secretWordElement.textContent = secretWord;
 
-            if (state === GameState.WON) {
-                headerElement.classList.add(UI_CONFIG.MODAL.CLASSES.HEADER_WON);
-            } else if (state === GameState.LOST) {
-                headerElement.classList.add(UI_CONFIG.MODAL.CLASSES.HEADER_LOST);
-            }
+        const allHeaderClasses = Object.values(UI_CONFIG.MODAL.HEADER_CLASSES);
+        headerElement.classList.remove(...allHeaderClasses);
 
-            modal.classList.remove(UI_CONFIG.MODAL.CLASSES.HIDDEN);
-            modal.classList.add(UI_CONFIG.MODAL.CLASSES.VISIBLE);
-        }
+        const stateClass = UI_CONFIG.MODAL.HEADER_CLASSES[state];
+        if (stateClass) headerElement.classList.add(stateClass);
+
+        modal.classList.remove(UI_CONFIG.MODAL.CLASSES.HIDDEN);
+        modal.classList.add(UI_CONFIG.MODAL.CLASSES.VISIBLE);
     }
 
     hideModal(): void {
@@ -95,7 +95,7 @@ export class UI implements IGameUI {
 
     private resetCells(): void {
         const allCells = document.querySelectorAll(UI_CONFIG.SELECTORS.VIRTUAL_CELL);
-        
+
         allCells.forEach(cell => {
             cell.textContent = "";
             cell.classList.remove(...ALL_STATE_CLASSES);
@@ -106,5 +106,4 @@ export class UI implements IGameUI {
         const keys = document.querySelectorAll<HTMLButtonElement>(UI_CONFIG.SELECTORS.VIRTUAL_KEY);
         keys.forEach(key => key.classList.remove(...ALL_STATE_CLASSES));
     }
-
 }

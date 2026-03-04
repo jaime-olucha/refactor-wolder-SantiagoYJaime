@@ -79,7 +79,7 @@ export class Game {
 
         if (this._currentWord === this._secretWord) {
             this._gameState = GameState.WON;
-            this._ui.onGameOver(GameState.WON);
+            this._ui.onGameOver(GameState.WON, this._secretWord);
             return;
         }
 
@@ -91,7 +91,7 @@ export class Game {
 
         if (this._currentRow === MAX_ATTEMPTS) {
             this._gameState = GameState.LOST;
-            this._ui.onGameOver(GameState.LOST);
+            this._ui.onGameOver(GameState.LOST, this._secretWord);
             return;
         }
 
