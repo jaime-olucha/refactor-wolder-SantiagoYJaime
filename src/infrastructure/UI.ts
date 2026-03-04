@@ -62,6 +62,7 @@ export class UI implements IGameUI {
     resetBoard(): void {
         this.resetCells();
         this.resetKeys();
+        this.hideModal();
     }
 
     private getCellElement(row: number, column: number): HTMLElement | null {
@@ -96,4 +97,5 @@ export class UI implements IGameUI {
         const keys = document.querySelectorAll<HTMLButtonElement>(UI_CONFIG.SELECTORS.VIRTUAL_KEY);
         keys.forEach(key => key.classList.remove(...ALL_STATE_CLASSES));
     }
+
 }
