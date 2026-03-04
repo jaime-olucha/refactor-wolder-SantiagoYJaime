@@ -18,4 +18,5 @@ const handleKeyPress = (key: string): void => {
     if (VALID_KEYS.includes(key)) return game.addLetter(key);
 }
  
-new InputManager(handleKeyPress);
+new InputManager(handleKeyPress, () => game.reset());
+
