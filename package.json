@@ -6,7 +6,8 @@
   "scripts": {
     "build": "tsc",
     "watch": "tsc --watch",
-    "start": "npx serve ."
+    "start": "npx serve public/ -s",
+    "dev": "npm run watch & npx serve public/ -s -l 3000"
   },
   "repository": {
     "type": "git",
