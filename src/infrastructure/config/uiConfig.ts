@@ -14,8 +14,9 @@ export const UI_CONFIG = {
     } as Partial<Record<GameState, string>>,
 
     SELECTORS: {
-        VIRTUAL_KEY: '.key'
+        VIRTUAL_KEY: '.key',
+        PLAY_GAME_BTN: '#btn_new_game'  
     }
 };
 
-export const ALL_STATE_CLASSES = Object.values(UI_CONFIG.CSS_CLASSES).filter(cssClass => cssClass !== '');
+export const ALL_STATE_CLASSES = Object.values(UI_CONFIG.CSS_CLASSES).filter(cssClass => cssClass !== ''); 

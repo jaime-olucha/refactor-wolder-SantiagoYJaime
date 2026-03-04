@@ -18,8 +18,5 @@ const handleKeyPress = (key: string): void => {
     if (VALID_KEYS.includes(key)) return game.addLetter(key);
 }
  
-new InputManager(handleKeyPress);
+new InputManager(handleKeyPress, () => game.reset());
 
-// Conecta el botón "Nueva Partida" del header con el método reset() de Game
-    document.getElementById("btn_new_game")
-    ?.addEventListener("click", () => game.reset());
