@@ -1,4 +1,6 @@
-import { UI_CONFIG } from "./config/uiConfig";
+import { UI_CONFIG } from "./config/uiConfig.js";
+import { VALID_KEYS } from "../shared/constants.js";
+import { normalize } from "../shared/utils.js";
 
 export class InputManager {
 
@@ -12,7 +14,7 @@ export class InputManager {
     }
 
     private toUpperKey(key: string): string {
-        return key.toUpperCase();
+        return normalize(key);
     }
 
     private initPhysicalKeyboard(): void {
@@ -26,14 +28,18 @@ export class InputManager {
         virtualKeys.forEach(button => {
             button.addEventListener("click", (event) => {
                 const target = event.target as HTMLButtonElement;
-                this.onKeyPress(this.toUpperKey(target.value));
+                const normalizedKey = this.toUpperKey(target.value)
+                
+                if(VALID_KEYS.includes(normalizedKey)) {
+                    this.onKeyPress(normalizedKey);
+                }
             });
         });
     }
 
     // Conecta el botón de nueva partida con el callback onNewGame
     private initNewGameButton(): void {
-        const button = document.querySelector(UI_CONFIG.SELECTORS.PLAY_GAME_BTN);
+        const button = document.querySelector(UI_CONFIG.SELECTORS.PLAY_AGAIN_BTN);
         button?.addEventListener("click", () => this.onNewGame());
     }
 

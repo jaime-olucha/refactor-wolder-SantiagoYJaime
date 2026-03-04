@@ -6,4 +6,5 @@ export interface IGameUI {
     changeCellState(row: number, col: number, state: LetterState): void;
     changeKeyState(key: string, state: LetterState): void;
     onGameOver(state: GameState): void;
+    resetBoard():void
 }
