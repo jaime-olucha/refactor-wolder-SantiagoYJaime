@@ -8,10 +8,7 @@ export const COMMANDS = {
 
 export const WORDS_DB: string[] = [
     "JUEGO", "TALAR", "BAILE", "ANDAR", "MONTE", 
-    "PLAYA", "PLATA", "ARBOL", "QUESO", "NIÑOS",
-    "CIELO", "MUNDO", "PIANO", "FRUTA", "LIBRO",
-    "SOÑAR", "COMER", "VIVIR", "SALIR", "VOLAR",
-    "VERDE", "DULCE", "BRAVO", "CLARO", "NOCHE"
+    "PLAYA", "PLATA", "ARBOL", "QUESO", "NIÑOS"
 ];
 
 
