@@ -194,6 +194,10 @@ h1 {
     margin: 0;
 }
 
+.secret-word-text {
+    font-size: 1.2rem;
+}
+
 #modal-body {
     flex-grow: 1;
     display: flex;
@@ -234,4 +238,22 @@ h1 {
 
 #game-modal.visible {
     display: flex !important;
+}
+
+.flip {
+    animation: flipTile 0.2s ease forwards;
+}
+
+@keyframes flipTile {
+    0% {
+        transform: rotateX(0deg);
+    }
+
+    50% {
+        transform: rotateX(90deg);
+    }
+
+    100% {
+        transform: rotateX(0deg);
+    }
 }
