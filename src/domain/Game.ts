@@ -19,6 +19,7 @@ export class Game {
     private _gameState: GameState;
     private readonly _validator: WordValidator;
     private readonly _ui: IGameUI;
+    private readonly _wordProvider: IWordProvider;
 
 // Qué hace cada una:  PROPIEDADES
 // _secretWord La palabra que hay que adivinar
@@ -30,6 +31,7 @@ export class Game {
 // _ui La interfaz visual — acepta cualquier IGameUI con la que se construya el juego.
 
     constructor(wordProvider: IWordProvider, ui: IGameUI) {
+        this._wordProvider = wordProvider;
         this._secretWord = wordProvider.getRandomWord();
         this._currentWord = "";
         this._currentRow = 1;
@@ -108,5 +110,21 @@ export class Game {
     // Avanza a la siguiente fila
     // Resetea la columna a 0 para empezar desde la izquierda
     // Limpia la palabra actual para el nuevo turno
+
+    // Resetea la partida completa:
+    // 1. Pide una nueva palabra secreta al proveedor
+    // 2. Limpia el estado interno del juego (palabra, fila, columna, estado)
+    // 3. Le dice a la UI que limpie el tablero visualmente
+    public reset(): void {
+        this._secretWord = this._wordProvider.getRandomWord(); // nueva palabra secreta
+        this._currentWord = "";      // limpia la palabra que llevaba escrita el jugador
+        this._currentRow = 1;        // vuelve a la primera fila
+        this._currentCol = 0;        // vuelve a la primera columna
+        this._gameState = GameState.PLAYING; // el juego vuelve a estar en curso
+        this._ui.resetBoard();       // le pide a la UI que limpie celdas y teclas
+    }   
+
+
+
 
 }   

@@ -5,8 +5,3 @@ export function normalize(text: string): string {
         .toUpperCase();
 }
 
-export function keyCodeToLetter(code: string): string {
-    if (code === "Semicolon") return "Ñ";
-    if (code.startsWith("Key")) return code.replace("Key", "");
-    return "";
-}
