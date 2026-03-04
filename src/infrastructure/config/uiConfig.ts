@@ -1,4 +1,4 @@
-import { LetterState, GameState } from "../../shared/types";
+import { LetterState, GameState } from "../../shared/types.js";
 
 export const UI_CONFIG = {
     CSS_CLASSES: {
@@ -14,21 +14,17 @@ export const UI_CONFIG = {
         } as Partial<Record<GameState, string>>,
         CLASSES: {
             HIDDEN: 'hidden', 
-            VISIBLE: 'visible'
+            VISIBLE: 'visible',
+            HEADER_WON: 'modal-header-won',
+            HEADER_LOST: 'modal-header-lost'
         }
     },
     
-    
-    /*
-    ROUTES: {
-        WON: '/winner',
-        LOST: '/loser'
-    } as Partial<Record<GameState, string>>,
-    */
     SELECTORS: {
         VIRTUAL_KEY: '.key',
         VIRTUAL_CELL: '.cell',
         MODAL_CONTAINER: '#game-modal', 
+        MODAL_HEADER: '#modal-header',
         MODAL_MESSAGE: '#modal-message',
         PLAY_AGAIN_BTN: '#play-again-btn'
     }
