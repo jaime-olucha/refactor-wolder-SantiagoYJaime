@@ -16,7 +16,19 @@ export class UI implements IGameUI {
 
     changeCellState(row: number, column: number, state: LetterState): void {
         const cell = this.getCellElement(row, column);
+        if (!cell) return;
+
+        const delay = column * 100;
+
+        cell.style.animationDelay = `${delay}ms`;
+        cell.classList.add('flip');
+
         if (cell) this.setElementState(cell, state);
+        setTimeout(() => {
+            if (cell.textContent !== "") {
+                this.setElementState(cell, state);
+            }
+        }, delay + 300);
     }
 
     changeKeyState(key: string, state: LetterState): void {
@@ -37,27 +49,29 @@ export class UI implements IGameUI {
         this.setElementState(button, state);
     }
 
-    onGameOver(state: GameState): void {
+    onGameOver(state: GameState, secretWord: string): void {
         const modal = this.getModalElement();
         const headerElement = document.querySelector(UI_CONFIG.SELECTORS.MODAL_HEADER) as HTMLElement | null;
         const messageElement = document.querySelector(UI_CONFIG.SELECTORS.MODAL_MESSAGE) as HTMLElement | null;
+        const secretWordElement = document.querySelector(UI_CONFIG.SELECTORS.MODAL_SECRET_WORD) as HTMLElement | null;
 
         const message = UI_CONFIG.MODAL.MESSAGES[state];
 
-        if (modal && messageElement && headerElement && message) {
+        if (!modal || !messageElement || !headerElement || !message) return;
+
+        setTimeout(() => {
             messageElement.textContent = message;
+            if (secretWordElement) secretWordElement.textContent = secretWord;
 
-            headerElement.classList.remove(UI_CONFIG.MODAL.CLASSES.HEADER_WON, UI_CONFIG.MODAL.CLASSES.HEADER_LOST);
+            const allHeaderClasses = Object.values(UI_CONFIG.MODAL.HEADER_CLASSES);
+            headerElement.classList.remove(...allHeaderClasses);
 
-            if (state === GameState.WON) {
-                headerElement.classList.add(UI_CONFIG.MODAL.CLASSES.HEADER_WON);
-            } else if (state === GameState.LOST) {
-                headerElement.classList.add(UI_CONFIG.MODAL.CLASSES.HEADER_LOST);
-            }
+            const stateClass = UI_CONFIG.MODAL.HEADER_CLASSES[state];
+            if (stateClass) headerElement.classList.add(stateClass);
 
             modal.classList.remove(UI_CONFIG.MODAL.CLASSES.HIDDEN);
             modal.classList.add(UI_CONFIG.MODAL.CLASSES.VISIBLE);
-        }
+        }, 750);
     }
 
     hideModal(): void {
@@ -95,10 +109,11 @@ export class UI implements IGameUI {
 
     private resetCells(): void {
         const allCells = document.querySelectorAll(UI_CONFIG.SELECTORS.VIRTUAL_CELL);
-        
+
         allCells.forEach(cell => {
             cell.textContent = "";
-            cell.classList.remove(...ALL_STATE_CLASSES);
+            cell.classList.remove(...ALL_STATE_CLASSES, 'flip');
+            (cell as HTMLElement).style.animationDelay = '0ms';
         });
     }
 
@@ -106,5 +121,4 @@ export class UI implements IGameUI {
         const keys = document.querySelectorAll<HTMLButtonElement>(UI_CONFIG.SELECTORS.VIRTUAL_KEY);
         keys.forEach(key => key.classList.remove(...ALL_STATE_CLASSES));
     }
-
 }
