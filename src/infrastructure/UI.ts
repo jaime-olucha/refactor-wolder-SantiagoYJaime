@@ -1,7 +1,6 @@
-import { MAX_ATTEMPTS, MAX_WORD_SIZE } from "../shared/constants";
-import { IGameUI } from "../shared/IGameUI";
-import { GameState, LetterState } from "../shared/types";
-import { UI_CONFIG, ALL_STATE_CLASSES } from "./config/uiConfig";
+import { IGameUI } from "../shared/IGameUI.js";
+import { GameState, LetterState } from "../shared/types.js";
+import { UI_CONFIG, ALL_STATE_CLASSES } from "./config/uiConfig.js";
 
 export class UI implements IGameUI {
 
@@ -40,12 +39,22 @@ export class UI implements IGameUI {
 
     onGameOver(state: GameState): void {
         const modal = this.getModalElement();
+        const headerElement = document.querySelector(UI_CONFIG.SELECTORS.MODAL_HEADER) as HTMLElement | null;
         const messageElement = document.querySelector(UI_CONFIG.SELECTORS.MODAL_MESSAGE) as HTMLElement | null;
 
         const message = UI_CONFIG.MODAL.MESSAGES[state];
 
-        if (modal && messageElement && message) {
+        if (modal && messageElement && headerElement && message) {
             messageElement.textContent = message;
+
+            headerElement.classList.remove(UI_CONFIG.MODAL.CLASSES.HEADER_WON, UI_CONFIG.MODAL.CLASSES.HEADER_LOST);
+
+            if (state === GameState.WON) {
+                headerElement.classList.add(UI_CONFIG.MODAL.CLASSES.HEADER_WON);
+            } else if (state === GameState.LOST) {
+                headerElement.classList.add(UI_CONFIG.MODAL.CLASSES.HEADER_LOST);
+            }
+
             modal.classList.remove(UI_CONFIG.MODAL.CLASSES.HIDDEN);
             modal.classList.add(UI_CONFIG.MODAL.CLASSES.VISIBLE);
         }

@@ -1,4 +1,4 @@
-import { IWordProvider } from "../shared/IWordProvider";
+import { IWordProvider } from "../shared/IWordProvider.js";
 
 export class WordProvider implements IWordProvider {
     constructor(private readonly words: string[]) {}
