@@ -6,11 +6,11 @@ export class InputManager {
 
     constructor(
         private onKeyPress: (key: string) => void,
-        private onNewGame: () => void              
+        private onNewGame: () => void
     ) {
         this.initPhysicalKeyboard();
         this.initVirtualKeyboard();
-        this.initNewGameButton();                  
+        this.initNewGameButton();
     }
 
     private toUpperKey(key: string): string {
@@ -29,10 +29,7 @@ export class InputManager {
             button.addEventListener("click", (event) => {
                 const target = event.target as HTMLButtonElement;
                 const normalizedKey = this.toUpperKey(target.value)
-                
-                if(VALID_KEYS.includes(normalizedKey)) {
-                    this.onKeyPress(normalizedKey);
-                }
+                this.onKeyPress(normalizedKey);
             });
         });
     }
