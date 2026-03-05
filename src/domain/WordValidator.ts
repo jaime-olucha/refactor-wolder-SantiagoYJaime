@@ -1,6 +1,7 @@
 import { LetterState } from "../shared/types.js";
+import { IWordValidator } from "../shared/IWordValidator.js";
 
-export class WordValidator {
+export class WordValidator implements IWordValidator {
     
     public validate(guess: string, target: string): LetterState[] {
         const result: LetterState[] = Array(target.length).fill(LetterState.ABSENT);
