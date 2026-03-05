@@ -1,4 +1,4 @@
-import { LetterState } from "../../shared/types.js";
+import { LetterState, GameState } from "../../shared/types.js";
 export const UI_CONFIG = {
     CSS_CLASSES: {
         [LetterState.CORRECT]: 'cell-green',
@@ -8,14 +8,17 @@ export const UI_CONFIG = {
     },
     MODAL: {
         MESSAGES: {
-            WON: 'Congratulations! You guessed the word.',
-            LOST: 'You are dead! You have run out of attempts.'
+            [GameState.WON]: 'Congratulations! You guessed the word.',
+            [GameState.LOST]: 'You are dead! You have run out of attempts.'
+        },
+        HEADER_CLASSES: {
+            [GameState.WON]: 'modal-header-won',
+            [GameState.LOST]: 'modal-header-lost'
         },
         CLASSES: {
             HIDDEN: 'hidden',
             VISIBLE: 'visible',
-            HEADER_WON: 'modal-header-won',
-            HEADER_LOST: 'modal-header-lost'
+            KEY_ACTIVE: 'key-active'
         }
     },
     SELECTORS: {
@@ -24,6 +27,7 @@ export const UI_CONFIG = {
         MODAL_CONTAINER: '#game-modal',
         MODAL_HEADER: '#modal-header',
         MODAL_MESSAGE: '#modal-message',
+        MODAL_SECRET_WORD: '#modal-secret-word',
         PLAY_AGAIN_BTN: '#play-again-btn, #btn-new-game'
     }
 };

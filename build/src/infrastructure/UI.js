@@ -1,4 +1,4 @@
-import { GameState, LetterState } from "../shared/types.js";
+import { LetterState } from "../shared/types.js";
 import { UI_CONFIG, ALL_STATE_CLASSES } from "./config/uiConfig.js";
 export class UI {
     drawLetter(row, column, letter) {
@@ -13,8 +13,18 @@ export class UI {
     }
     changeCellState(row, column, state) {
         const cell = this.getCellElement(row, column);
+        if (!cell)
+            return;
+        const delay = column * 100;
+        cell.style.animationDelay = `${delay}ms`;
+        cell.classList.add('flip');
         if (cell)
             this.setElementState(cell, state);
+        setTimeout(() => {
+            if (cell.textContent !== "") {
+                this.setElementState(cell, state);
+            }
+        }, delay + 300);
     }
     changeKeyState(key, state) {
         const button = document.querySelector(`.key[value="${key}"]`);
@@ -30,23 +40,26 @@ export class UI {
         }
         this.setElementState(button, state);
     }
-    onGameOver(state) {
+    onGameOver(state, secretWord) {
         const modal = this.getModalElement();
         const headerElement = document.querySelector(UI_CONFIG.SELECTORS.MODAL_HEADER);
         const messageElement = document.querySelector(UI_CONFIG.SELECTORS.MODAL_MESSAGE);
+        const secretWordElement = document.querySelector(UI_CONFIG.SELECTORS.MODAL_SECRET_WORD);
         const message = UI_CONFIG.MODAL.MESSAGES[state];
-        if (modal && messageElement && headerElement && message) {
+        if (!modal || !messageElement || !headerElement || !message)
+            return;
+        setTimeout(() => {
             messageElement.textContent = message;
-            headerElement.classList.remove(UI_CONFIG.MODAL.CLASSES.HEADER_WON, UI_CONFIG.MODAL.CLASSES.HEADER_LOST);
-            if (state === GameState.WON) {
-                headerElement.classList.add(UI_CONFIG.MODAL.CLASSES.HEADER_WON);
-            }
-            else if (state === GameState.LOST) {
-                headerElement.classList.add(UI_CONFIG.MODAL.CLASSES.HEADER_LOST);
-            }
+            if (secretWordElement)
+                secretWordElement.textContent = secretWord;
+            const allHeaderClasses = Object.values(UI_CONFIG.MODAL.HEADER_CLASSES);
+            headerElement.classList.remove(...allHeaderClasses);
+            const stateClass = UI_CONFIG.MODAL.HEADER_CLASSES[state];
+            if (stateClass)
+                headerElement.classList.add(stateClass);
             modal.classList.remove(UI_CONFIG.MODAL.CLASSES.HIDDEN);
             modal.classList.add(UI_CONFIG.MODAL.CLASSES.VISIBLE);
-        }
+        }, 750);
     }
     hideModal() {
         const modal = this.getModalElement();
@@ -81,7 +94,8 @@ export class UI {
         const allCells = document.querySelectorAll(UI_CONFIG.SELECTORS.VIRTUAL_CELL);
         allCells.forEach(cell => {
             cell.textContent = "";
-            cell.classList.remove(...ALL_STATE_CLASSES);
+            cell.classList.remove(...ALL_STATE_CLASSES, 'flip');
+            cell.style.animationDelay = '0ms';
         });
     }
     resetKeys() {
