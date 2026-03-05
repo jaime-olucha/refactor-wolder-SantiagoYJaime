@@ -28,7 +28,7 @@ export const UI_CONFIG = {
         MODAL_HEADER: '#modal-header',
         MODAL_MESSAGE: '#modal-message',
         MODAL_SECRET_WORD: '#modal-secret-word',
-        PLAY_AGAIN_BTN: '#play-again-btn, #btn-new-game'
+        PLAY_AGAIN_BTN: '.new-game'
     }
 };
 export const ALL_STATE_CLASSES = Object.values(UI_CONFIG.CSS_CLASSES).filter(cssClass => cssClass !== '');
