@@ -1,4 +1,5 @@
 import { LetterState, GameState } from "../../shared/types.js";
+import { MAX_WORD_SIZE } from "../../shared/constants.js";
 
 export const UI_CONFIG = {
     CSS_CLASSES: {
@@ -33,6 +34,15 @@ export const UI_CONFIG = {
         MODAL_MESSAGE: '#modal-message',
         MODAL_SECRET_WORD: '#modal-secret-word',
         PLAY_AGAIN_BTN: '.new-game'
+    },
+
+    ANIMATION: {
+        FLIP_ANIMATION: {
+            CLASS: 'flip',
+            COLUMN_DELAY: 100,
+            CELL_DELAY: 300,
+            AWAIT_DELAY: (MAX_WORD_SIZE - 1) * 100 + 300 + 50
+        }
     }
 };
 
