@@ -18,17 +18,17 @@ export class UI implements IGameUI {
         const cell = this.getCellElement(row, column);
         if (!cell) return;
 
-        const delay = column * 100;
+        const delay = column * UI_CONFIG.ANIMATION.FLIP_ANIMATION.COLUMN_DELAY;
 
         cell.style.animationDelay = `${delay}ms`;
-        cell.classList.add('flip');
+        cell.classList.add(UI_CONFIG.ANIMATION.FLIP_ANIMATION.CLASS);
 
         if (cell) this.setElementState(cell, state);
         setTimeout(() => {
             if (cell.textContent !== "") {
                 this.setElementState(cell, state);
             }
-        }, delay + 300);
+        }, delay + UI_CONFIG.ANIMATION.FLIP_ANIMATION.CELL_DELAY);
     }
 
     changeKeyState(key: string, state: LetterState): void {
@@ -71,7 +71,7 @@ export class UI implements IGameUI {
 
             modal.classList.remove(UI_CONFIG.MODAL.CLASSES.HIDDEN);
             modal.classList.add(UI_CONFIG.MODAL.CLASSES.VISIBLE);
-        }, 750);
+        }, UI_CONFIG.ANIMATION.FLIP_ANIMATION.AWAIT_DELAY);
     }
 
     hideModal(): void {

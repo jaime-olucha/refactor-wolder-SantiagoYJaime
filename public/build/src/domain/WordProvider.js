@@ -3,9 +3,6 @@ export class WordProvider {
     constructor(words) {
         this.words = words;
     }
-    /**
-     * Retorna una palabra aleatoria del listado disponible.
-     */
     getRandomWord() {
         if (this.words.length === 0) {
             throw new Error("El listado de palabras está vacío.");
