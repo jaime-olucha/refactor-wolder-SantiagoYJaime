@@ -2,22 +2,25 @@ import { GameState } from "../shared/types.js";
 import { MAX_WORD_SIZE, MAX_ATTEMPTS } from "../shared/constants.js";
 export class Game {
     _secretWord;
-    _currentWord;
-    _currentRow;
-    _currentCol;
-    _gameState;
+    _currentWord = "";
+    _currentRow = 1;
+    _currentCol = 0;
+    _gameState = GameState.PLAYING;
     _validator;
     _ui;
     _wordProvider;
     constructor(wordProvider, validator, ui) {
         this._wordProvider = wordProvider;
+        this._validator = validator;
+        this._ui = ui;
         this._secretWord = wordProvider.getRandomWord();
+    }
+    initInternalState() {
+        this._secretWord = this._wordProvider.getRandomWord();
         this._currentWord = "";
         this._currentRow = 1;
         this._currentCol = 0;
         this._gameState = GameState.PLAYING;
-        this._validator = validator;
-        this._ui = ui;
     }
     isGameActive() {
         return this._gameState === GameState.PLAYING;

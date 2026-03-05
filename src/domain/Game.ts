@@ -6,23 +6,27 @@ import { MAX_WORD_SIZE, MAX_ATTEMPTS } from "../shared/constants.js";
 
 export class Game {
     private _secretWord: string;
-    private _currentWord: string;
-    private _currentRow: number;
-    private _currentCol: number;
-    private _gameState: GameState;
+    private _currentWord: string = "";
+    private _currentRow: number = 1;
+    private _currentCol: number = 0;
+    private _gameState: GameState = GameState.PLAYING;
     private readonly _validator: IWordValidator;
     private readonly _ui: IGameUI;
     private readonly _wordProvider: IWordProvider;
 
     constructor(wordProvider: IWordProvider, validator: IWordValidator, ui: IGameUI) {
         this._wordProvider = wordProvider;
+        this._validator = validator;
+        this._ui = ui;
         this._secretWord = wordProvider.getRandomWord();
+    }
+
+    private initInternalState(): void {
+        this._secretWord = this._wordProvider.getRandomWord();
         this._currentWord = "";
         this._currentRow = 1;
         this._currentCol = 0;
         this._gameState = GameState.PLAYING;
-        this._validator = validator;
-        this._ui = ui;
     }
 
     private isGameActive(): boolean {
