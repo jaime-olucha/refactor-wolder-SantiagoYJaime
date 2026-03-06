@@ -1,5 +1,3 @@
----
-
 # 🟩 Wordle Refactorizado — Clean Code + SOLID
 
 > Refactorización del juego Wordle aplicando principios **Clean Code** y **SOLID** en TypeScript.  
