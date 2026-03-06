@@ -84,7 +84,7 @@ export class UI implements IGameUI {
 
     resetBoard(): void {
         this.resetCells();
-        this.resetKeys();
+        this.resetKeys(); 
         this.hideModal();
     }
 
@@ -122,3 +122,4 @@ export class UI implements IGameUI {
         keys.forEach(key => key.classList.remove(...ALL_STATE_CLASSES));
     }
 }
+

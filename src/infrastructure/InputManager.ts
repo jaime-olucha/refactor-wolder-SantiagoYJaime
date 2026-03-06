@@ -1,5 +1,4 @@
 import { UI_CONFIG } from "./config/uiConfig.js";
-import { VALID_KEYS } from "../shared/constants.js";
 import { normalize } from "../shared/utils.js";
 
 export class InputManager {
