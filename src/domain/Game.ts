@@ -21,14 +21,6 @@ export class Game {
         this._secretWord = wordProvider.getRandomWord();
     }
 
-    private initInternalState(): void {
-        this._secretWord = this._wordProvider.getRandomWord();
-        this._currentWord = "";
-        this._currentRow = 1;
-        this._currentCol = 0;
-        this._gameState = GameState.PLAYING;
-    }
-
     private isGameActive(): boolean {
         return this._gameState === GameState.PLAYING
     }
