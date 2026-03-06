@@ -1,2 +1,2 @@
-[![Arquitectura Wordle](https://github.com/jaime-olucha/refactor-wolder-SantiagoYJaime/blob/master/README-arquitectura-wordle.html)](https://github.com/jaime-olucha/refactor-wolder-SantiagoYJaime/blob/master/README-arquitectura-wordle.html)
-<iframe src="[https://tuusuario.github.io/tu-repo/arquitectura-wordle-v2-2.html](https://github.com/jaime-olucha/refactor-wolder-SantiagoYJaime/blob/master/README-arquitectura-wordle.html)" width="100%" height="900" sandbox="allow-scripts"></iframe>
+[![Arquitectura Wordle](https://jaime-olucha.github.io/refactor-wolder-SantiagoYJaime/README-arquitectura-wordle.html)](https://jaime-olucha.github.io/refactor-wolder-SantiagoYJaime/README-arquitectura-wordle.html)
+<iframe src="[https://jaime-olucha.github.io/refactor-wolder-SantiagoYJaime/README-arquitectura-wordle.html](https://jaime-olucha.github.io/refactor-wolder-SantiagoYJaime/README-arquitectura-wordle.html)" width="100%" height="900" sandbox="allow-scripts"></iframe>
