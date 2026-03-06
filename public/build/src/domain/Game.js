@@ -15,13 +15,6 @@ export class Game {
         this._ui = ui;
         this._secretWord = wordProvider.getRandomWord();
     }
-    initInternalState() {
-        this._secretWord = this._wordProvider.getRandomWord();
-        this._currentWord = "";
-        this._currentRow = 1;
-        this._currentCol = 0;
-        this._gameState = GameState.PLAYING;
-    }
     isGameActive() {
         return this._gameState === GameState.PLAYING;
     }

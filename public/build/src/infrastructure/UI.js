@@ -15,16 +15,14 @@ export class UI {
         const cell = this.getCellElement(row, column);
         if (!cell)
             return;
-        const delay = column * UI_CONFIG.ANIMATION.FLIP_ANIMATION.COLUMN_DELAY;
+        const delay = column * UI_CONFIG.ANIMATION.FLIP_ANIMATION.FLIP_DELAY;
         cell.style.animationDelay = `${delay}ms`;
         cell.classList.add(UI_CONFIG.ANIMATION.FLIP_ANIMATION.CLASS);
-        if (cell)
-            this.setElementState(cell, state);
         setTimeout(() => {
             if (cell.textContent !== "") {
                 this.setElementState(cell, state);
             }
-        }, delay + UI_CONFIG.ANIMATION.FLIP_ANIMATION.CELL_DELAY);
+        }, delay + UI_CONFIG.ANIMATION.FLIP_ANIMATION.FLIP_DELAY);
     }
     changeKeyState(key, state) {
         const button = document.querySelector(`.key[value="${key}"]`);
