@@ -39,8 +39,7 @@ export const UI_CONFIG = {
     ANIMATION: {
         FLIP_ANIMATION: {
             CLASS: 'flip',
-            COLUMN_DELAY: 100,
-            CELL_DELAY: 300,
+            FLIP_DELAY: 100,
             AWAIT_DELAY: (MAX_WORD_SIZE - 1) * 100 + 300 + 50
         }
     }

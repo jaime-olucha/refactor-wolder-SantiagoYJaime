@@ -18,17 +18,16 @@ export class UI implements IGameUI {
         const cell = this.getCellElement(row, column);
         if (!cell) return;
 
-        const delay = column * UI_CONFIG.ANIMATION.FLIP_ANIMATION.COLUMN_DELAY;
+        const delay = column * UI_CONFIG.ANIMATION.FLIP_ANIMATION.FLIP_DELAY;
 
         cell.style.animationDelay = `${delay}ms`;
         cell.classList.add(UI_CONFIG.ANIMATION.FLIP_ANIMATION.CLASS);
 
-        if (cell) this.setElementState(cell, state);
         setTimeout(() => {
             if (cell.textContent !== "") {
                 this.setElementState(cell, state);
             }
-        }, delay + UI_CONFIG.ANIMATION.FLIP_ANIMATION.CELL_DELAY);
+        }, delay + UI_CONFIG.ANIMATION.FLIP_ANIMATION.FLIP_DELAY);
     }
 
     changeKeyState(key: string, state: LetterState): void {
@@ -84,7 +83,7 @@ export class UI implements IGameUI {
 
     resetBoard(): void {
         this.resetCells();
-        this.resetKeys();
+        this.resetKeys(); 
         this.hideModal();
     }
 
@@ -122,3 +121,4 @@ export class UI implements IGameUI {
         keys.forEach(key => key.classList.remove(...ALL_STATE_CLASSES));
     }
 }
+
