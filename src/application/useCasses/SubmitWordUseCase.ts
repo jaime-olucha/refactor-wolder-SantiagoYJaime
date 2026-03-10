@@ -1,6 +1,6 @@
-import { Game } from "../../domain/entities/Game";
-import { WordValidator } from "../../domain/services/WordValidator";
-import { LetterState } from "../../domain/types/typesState";
+import { Game } from "../../domain/entities/Game.js";
+import { WordValidator } from "../../domain/services/WordValidator.js";
+import { LetterState } from "../../domain/types/typesState.js";
 
 export class SubmitWordUseCase {
     private validator: WordValidator;
