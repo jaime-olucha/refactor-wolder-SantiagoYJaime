@@ -1,4 +1,4 @@
-import { LetterState, GameState } from './types.js';
+import { LetterState, GameState } from '../domain/types/typesState.js';
 
 export interface IGameUI {
     drawLetter(row: number, col: number, letter: string): void;

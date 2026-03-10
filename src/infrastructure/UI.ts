@@ -1,5 +1,5 @@
 import { IGameUI } from "../shared/IGameUI.js";
-import { GameState, LetterState } from "../shared/types.js";
+import { GameState, LetterState } from "../domain/types/typesState.js";
 import { UI_CONFIG, ALL_STATE_CLASSES } from "./config/uiConfig.js";
 
 export class UI implements IGameUI {

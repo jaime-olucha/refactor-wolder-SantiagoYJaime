@@ -1,4 +1,4 @@
-import { LetterState, GameState } from "../../shared/types.js";
+import { LetterState, GameState } from "../../domain/types/typesState.js";
 import { MAX_WORD_SIZE } from "../../shared/constants.js";
 
 export const UI_CONFIG = {

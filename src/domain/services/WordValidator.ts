@@ -1,5 +1,5 @@
-import { LetterState } from "../shared/types.js";
-import { IWordValidator } from "../shared/IWordValidator.js";
+import { LetterState } from "../types/typesState.js";
+import { IWordValidator } from "./IWordValidator.js";
 
 export class WordValidator implements IWordValidator {
     
