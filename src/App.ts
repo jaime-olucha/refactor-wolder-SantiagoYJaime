@@ -3,7 +3,7 @@ import { WordValidator } from "./domain/WordValidator.js";
 import { Game } from "./domain/entities/Game.js";
 import { UI } from "./infrastructure/UI.js";
 import { InputManager } from "./infrastructure/InputManager.js";
-import { VALID_KEYS, COMMANDS, WORDS_DB } from "./shared/constants.js";
+import { VALID_KEYS, COMMANDS, WORDS_DB } from "./shared/gameConfig.js";
 
 const wordProvider = new WordProvider(WORDS_DB);
 const validator = new WordValidator();

@@ -1,5 +1,5 @@
 import { Game } from "../../domain/entities/Game.js";
-import { RemoveLetterUseCase } from "../useCasses/RemoveLetterUseCase.js";
+import { RemoveLetterUseCase } from "../useCases/RemoveLetterUseCase.js";
 import { ICommand } from "./ICommand.js";
 
 export class RemoveLetterCommand implements ICommand {

@@ -1,4 +1,5 @@
 import { GameState } from "../types/typesState.js";
+import { MAX_ATTEMPTS, MAX_WORD_SIZE } from "../../shared/gameConfig.js";
 
 export class Game {
     private _secretWord: string;
@@ -8,7 +9,7 @@ export class Game {
     private readonly _maxAttempts: number;
     private readonly _maxWordSize: number;
 
-    constructor(secretWord: string, maxAttempts: number = 6, maxWordSize: number = 5) {
+    constructor(secretWord: string, maxAttempts: number = MAX_ATTEMPTS, maxWordSize: number = MAX_WORD_SIZE) {
         this._secretWord = secretWord;
         this._maxAttempts = maxAttempts;
         this._maxWordSize = maxWordSize;

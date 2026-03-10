@@ -1,5 +1,5 @@
 import { LetterState, GameState } from "../../domain/types/typesState.js";
-import { MAX_WORD_SIZE } from "../../shared/constants.js";
+import { MAX_WORD_SIZE } from "../../shared/gameConfig.js";
 
 export const UI_CONFIG = {
     CSS_CLASSES: {

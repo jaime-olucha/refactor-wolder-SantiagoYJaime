@@ -1,5 +1,5 @@
 import { Game } from "../../domain/entities/Game";
-import { SubmitWordUseCase } from "../useCasses/SubmitWordUseCase";
+import { SubmitWordUseCase } from "../useCases/SubmitWordUseCase";
 import { ICommand } from "./ICommand";
 
 export class SubmitWordCommand implements ICommand {

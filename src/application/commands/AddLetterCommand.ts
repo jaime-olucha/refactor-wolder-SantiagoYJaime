@@ -1,5 +1,5 @@
 import { Game } from "../../domain/entities/Game";
-import { AddLetterUseCase } from "../useCasses/addLetterUseCase";
+import { AddLetterUseCase } from "../useCases/addLetterUseCase";
 import { ICommand } from "./ICommand";
 
 export class AddLetterCommand implements ICommand {
