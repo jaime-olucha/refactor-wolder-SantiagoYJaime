@@ -1,7 +1,8 @@
 import { Game } from "../../domain/entities/Game.js";
 import { IGamePresenter } from "../ports/IGamePresenter.js";
+import { IRemoveLetterUseCase } from "../ports/IRemoveLetterUseCase.js";
 
-export class RemoveLetterUseCase {
+export class RemoveLetterUseCase implements IRemoveLetterUseCase {
     constructor(private presenter: IGamePresenter) { }
 
     public execute(game: Game): void {

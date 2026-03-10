@@ -1,7 +1,8 @@
 import { Game } from "../../domain/entities/Game.js";
+import { IAddLetterUseCase } from "../ports/IAddLetterUseCase.js";
 import { IGamePresenter } from "../ports/IGamePresenter.js";
 
-export class AddLetterUseCase {
+export class AddLetterUseCase implements IAddLetterUseCase {
     constructor(private presenter: IGamePresenter) { }
 
     public execute(game: Game, letter: string): void {

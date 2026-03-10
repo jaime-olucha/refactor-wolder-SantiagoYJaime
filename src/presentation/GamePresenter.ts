@@ -17,11 +17,13 @@ export class GamePresenter implements IGamePresenter {
         this._view.deleteLetter(row, column);
     }
 
+    public presentLetterState(row: number, column: number, state: LetterState, letter: string): void {
+        this._view.changeCellState(row, column, state);
+        this._view.changeKeyState(letter, state);
+    }
+
     public presentWordValidated(row: number, states: LetterState[], guess: string): void {
-        states.forEach((state, col) => {
-            this._view.changeCellState(row, col, state);
-            this._view.changeKeyState(guess[col], state);
-        });
+        states.forEach((state, column) => this.presentLetterState(row, column, state, guess[column]));
     }
 
     public presentGameOver(state: GameState, secretWord: string): void {

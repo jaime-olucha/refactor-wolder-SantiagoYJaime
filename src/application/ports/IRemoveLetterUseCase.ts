@@ -1,5 +1,5 @@
 import { Game } from "../../domain/entities/Game.js";
 
-export interface ICommand {
+export interface IRemoveLetterUseCase {
     execute(game: Game): void;
 }

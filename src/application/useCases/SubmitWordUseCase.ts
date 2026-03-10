@@ -3,8 +3,9 @@ import { IWordValidator } from "../../domain/services/IWordValidator.js";
 import { GameState } from "../../domain/types/typesState.js";
 import { IGamePresenter } from "../ports/IGamePresenter.js";
 import { LetterState } from "../../domain/types/typesState.js";
+import { ISubmitWordUseCase } from "../ports/ISubmitWordUseCase.js";
 
-export class SubmitWordUseCase {
+export class SubmitWordUseCase implements ISubmitWordUseCase {
     private readonly _validator: IWordValidator;
     private readonly _presenter: IGamePresenter;
 

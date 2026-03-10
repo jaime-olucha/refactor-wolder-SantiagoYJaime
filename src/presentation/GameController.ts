@@ -1,41 +1,22 @@
-import { Game } from "../domain/entities/Game";
-import { AddLetterUseCase } from "../application/useCases/addLetterUseCase";
-import { RemoveLetterUseCase } from "../application/useCases/RemoveLetterUseCase";
-import { SubmitWordUseCase } from "../application/useCases/SubmitWordUseCase";
-import { AddLetterCommand } from "../application/commands/AddLetterCommand";
-import { RemoveLetterCommand } from "../application/commands/RemoveLetterCommand";
-import { SubmitWordCommand } from "../application/commands/SubmitWordCommand";
-import { GameState } from "../domain/types/typesState";
-import { VALID_KEYS, COMMANDS } from "../shared/gameConfig.js"
+import { Game } from "../domain/entities/Game.js";
+import { IGameUseCases } from "../application/ports/IGameUseCases.js";
+import { GameState } from "../domain/types/typesState.js";
+import { VALID_KEYS, COMMANDS } from "../shared/gameConfig.js";
 
 export class GameController {
     private readonly _game: Game;
-    private readonly _addLetterUseCase: AddLetterUseCase;
-    private readonly _removeLetterUseCase: RemoveLetterUseCase;
-    private readonly _submitWordUseCase: SubmitWordUseCase;
+    private readonly _useCases: IGameUseCases;
 
-    constructor(game: Game, addLetterUseCase: AddLetterUseCase, removeLetterUseCase: RemoveLetterUseCase, submitWordUseCase: SubmitWordUseCase) {
+    constructor(game: Game, useCases: IGameUseCases) {
         this._game = game;
-        this._addLetterUseCase = addLetterUseCase;
-        this._removeLetterUseCase = removeLetterUseCase;
-        this._submitWordUseCase = submitWordUseCase;
+        this._useCases = useCases;
     }
 
-    public handleInput(key: string):void {
-        if(this._game.gameState !== GameState.PLAYING) return;
+    public handleInput(key: string): void {
+        if (this._game.gameState !== GameState.PLAYING) return;
 
-        if(key === COMMANDS.ENTER) {
-            const command = new SubmitWordCommand(this._submitWordUseCase);
-            command.execute(this._game)
-        
-        } else if(key === COMMANDS.BACKSPACE) {
-            const command = new RemoveLetterCommand(this._removeLetterUseCase);
-            command.execute(this._game);
-        
-        } else if(VALID_KEYS.test(key)) {
-            const command = new AddLetterCommand(this._addLetterUseCase, key);
-            command.execute(this._game)
-        }
+        if (key === COMMANDS.ENTER) return this._useCases.submitWord.execute(this._game);
+        if (key === COMMANDS.BACKSPACE) return this._useCases.removeLetter.execute(this._game);
+        if (VALID_KEYS.test(key)) return this._useCases.addLetter.execute(this._game, key);
     }
 }
-
