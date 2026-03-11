@@ -46,9 +46,9 @@ export class UI implements IGameView {
     }
 
     resetGame(): void {
-        this.resetCells;
-        this.resetKeys;
-        this.hideModal
+        this.resetCells();
+        this.resetKeys();
+        this.hideModal()
     }
 
     private hideModal(): void {
@@ -64,7 +64,7 @@ export class UI implements IGameView {
 
         allCells.forEach(cell => {
             cell.textContent = "";
-            cell.classList.remove(...ALL_STATE_CLASSES, 'flip');
+            cell.classList.remove(...ALL_STATE_CLASSES, UI_CONFIG.ANIMATION.FLIP_ANIMATION.CLASS);
             (cell as HTMLElement).style.animationDelay = '0ms';
         });
     }
