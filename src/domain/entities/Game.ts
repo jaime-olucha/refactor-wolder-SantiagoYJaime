@@ -78,4 +78,11 @@ export class Game {
         return this._guesses.length >= this._maxAttempts;
     }
 
+    public reset(newSecretWord: string): void {
+        this._secretWord = newSecretWord;
+        this._guesses = [];
+        this.resetCurrentWord();
+        this._gameState = GameState.PLAYING;
+    }
+
 }   

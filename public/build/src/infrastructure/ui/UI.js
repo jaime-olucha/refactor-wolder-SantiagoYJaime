@@ -1,4 +1,3 @@
-import { GameState } from "../../domain/types/typesState.js";
 import { UI_CONFIG, ALL_STATE_CLASSES } from "../config/uiConfig.js";
 export class UI {
     drawLetter(row, column, letter) {
@@ -8,21 +7,32 @@ export class UI {
         this.withCell(row, column, cell => cell.textContent = '');
     }
     changeCellState(row, column, state) {
-        this.withCell(row, column, cell => this.applyStateClass(cell, state));
+        const delay = column * UI_CONFIG.ANIMATION.FLIP_ANIMATION.FLIP_DELAY;
+        this.withCell(row, column, cell => {
+            setTimeout(() => {
+                cell.classList.add(UI_CONFIG.ANIMATION.FLIP_ANIMATION.CLASS);
+                this.applyStateClass(cell, state);
+            }, delay);
+        });
     }
-    changeKeyState(key, state) {
-        const button = document.querySelector(`${UI_CONFIG.SELECTORS.VIRTUAL_KEY}[value="${key.toUpperCase()}"]`);
-        if (button)
-            this.applyStateClass(button, state);
+    changeKeyState(key, state, column) {
+        const delay = column * UI_CONFIG.ANIMATION.FLIP_ANIMATION.FLIP_DELAY;
+        setTimeout(() => {
+            const button = document.querySelector(`${UI_CONFIG.SELECTORS.VIRTUAL_KEY}[value="${key.toUpperCase()}"]`);
+            if (button)
+                this.applyStateClass(button, state);
+        }, delay);
     }
     showGameOver(state, secretWord) {
-        const elements = this.getModalElements();
-        if (!elements)
-            return;
-        this.setModalMessage(elements.message, state);
-        this.setModalHeaderClass(elements.title, state);
-        this.setSecretWord(elements.secretWordContainer, state, secretWord);
-        this.showModal(elements.modal);
+        setTimeout(() => {
+            const elements = this.getModalElements();
+            if (!elements)
+                return;
+            this.setModalMessage(elements.message, state);
+            this.setModalHeaderClass(elements.title, state);
+            this.setSecretWord(elements.secretWordContainer, state, secretWord);
+            this.showModal(elements.modal);
+        }, UI_CONFIG.ANIMATION.FLIP_ANIMATION.AWAIT_DELAY);
     }
     getModalElements() {
         const modal = document.querySelector(UI_CONFIG.SELECTORS.MODAL_CONTAINER);
@@ -47,7 +57,7 @@ export class UI {
     setSecretWord(element, state, secretWord) {
         if (!element)
             return;
-        element.textContent = state === GameState.LOST ? secretWord : '';
+        element.textContent = secretWord;
     }
     showModal(modal) {
         modal.classList.remove(UI_CONFIG.MODAL.CLASSES.HIDDEN);

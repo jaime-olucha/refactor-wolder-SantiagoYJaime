@@ -11,7 +11,7 @@ export class GamePresenter {
     }
     presentLetterState(row, column, state, letter) {
         this._view.changeCellState(row, column, state);
-        this._view.changeKeyState(letter, state);
+        this._view.changeKeyState(letter, state, column);
     }
     presentWordValidated(row, states, guess) {
         states.forEach((state, column) => this.presentLetterState(row, column, state, guess[column]));

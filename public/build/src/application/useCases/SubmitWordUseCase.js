@@ -9,10 +9,11 @@ export class SubmitWordUseCase {
     execute(game) {
         if (!game.canSubmit())
             return;
+        const guess = game.currentWord;
         const states = this.validateCurrentWord(game);
         const currentRow = game.guesses.length + 1;
         game.submitWord();
-        this.presentValidation(currentRow, states, game.currentWord);
+        this.presentValidation(currentRow, states, guess);
         this.presentGameOverIfNeeded(game);
     }
     validateCurrentWord(game) {

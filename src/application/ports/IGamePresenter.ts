@@ -5,4 +5,5 @@ export interface IGamePresenter {
     presentLetterRemoved(row: number, column: number): void;
     presentWordValidated(row: number, states: LetterState[], guess: string): void;
     presentGameOver(state: GameState, secretWord: string): void;
+    presentGameReset(): void;
 }

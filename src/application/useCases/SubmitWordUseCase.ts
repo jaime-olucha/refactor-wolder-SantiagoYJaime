@@ -17,12 +17,13 @@ export class SubmitWordUseCase implements ISubmitWordUseCase {
     public execute(game: Game): void {
         if (!game.canSubmit()) return;
 
+        const guess = game.currentWord;
         const states = this.validateCurrentWord(game);
         const currentRow = game.guesses.length + 1;
 
         game.submitWord();
 
-        this.presentValidation(currentRow, states, game.currentWord);
+        this.presentValidation(currentRow, states, guess);
         this.presentGameOverIfNeeded(game);
     }
 

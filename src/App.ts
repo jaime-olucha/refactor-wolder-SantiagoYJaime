@@ -5,6 +5,7 @@ import { WordValidator } from "./domain/services/WordValidator.js";
 import { AddLetterUseCase } from "./application/useCases/AddLetterUseCase.js";
 import { RemoveLetterUseCase } from "./application/useCases/RemoveLetterUseCase.js";
 import { SubmitWordUseCase } from "./application/useCases/SubmitWordUseCase.js";
+import { ResetGameUseCase } from "./application/useCases/ResetGameUseCase.js";
 import { Game } from "./domain/entities/Game.js";
 import { GameController } from "./presentation/GameController.js";
 import { InputManager } from "./infrastructure/input/InputManager.js";
@@ -22,11 +23,13 @@ document.addEventListener('DOMContentLoaded', () => {
     const addLetterUseCase = new AddLetterUseCase(presenter);
     const removeLetterUseCase = new RemoveLetterUseCase(presenter);
     const submitWordUseCase = new SubmitWordUseCase(validator, presenter);
+    const resetGameUseCase = new ResetGameUseCase(repository, presenter)
 
     const useCases: IGameUseCases = {
         addLetter: addLetterUseCase,
         removeLetter: removeLetterUseCase,
-        submitWord: submitWordUseCase
+        submitWord: submitWordUseCase,
+        resetGame: resetGameUseCase
     };
 
     const secretWord = repository.getRandomWord();

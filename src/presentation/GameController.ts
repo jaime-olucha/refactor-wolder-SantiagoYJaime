@@ -20,4 +20,8 @@ export class GameController implements IInputHandler {
         if (key === COMMANDS.BACKSPACE) return this._useCases.removeLetter.execute(this._game);
         if (VALID_KEYS.test(key)) return this._useCases.addLetter.execute(this._game, key);
     }
+
+    handleRestart(): void {
+        this._useCases.resetGame.execute(this._game);
+    }
 }

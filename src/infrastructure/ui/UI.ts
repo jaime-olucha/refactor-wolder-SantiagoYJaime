@@ -12,26 +12,67 @@ export class UI implements IGameView {
     }
 
     changeCellState(row: number, column: number, state: LetterState): void {
-        this.withCell(row, column, cell => this.applyStateClass(cell, state));
+        const delay = column * UI_CONFIG.ANIMATION.FLIP_ANIMATION.FLIP_DELAY;
+
+        this.withCell(row, column, cell => {
+            setTimeout(() => {
+                cell.classList.add(UI_CONFIG.ANIMATION.FLIP_ANIMATION.CLASS);
+                this.applyStateClass(cell, state);
+            }, delay);
+        });
     }
 
-    changeKeyState(key: string, state: LetterState): void {
-        const button = document.querySelector(
-            `${UI_CONFIG.SELECTORS.VIRTUAL_KEY}[value="${key.toUpperCase()}"]`
-        );
-        if (button) this.applyStateClass(button, state);
+    changeKeyState(key: string, state: LetterState, column: number): void {
+        const delay = column * UI_CONFIG.ANIMATION.FLIP_ANIMATION.FLIP_DELAY;
+
+        setTimeout(() => {
+            const button = document.querySelector(
+                `${UI_CONFIG.SELECTORS.VIRTUAL_KEY}[value="${key.toUpperCase()}"]`
+            );
+            if (button) this.applyStateClass(button, state);
+        }, delay);
     }
 
     showGameOver(state: GameState, secretWord: string): void {
-        const elements = this.getModalElements();
-        if (!elements) return;
+        setTimeout(() => {
+            const elements = this.getModalElements();
+            if (!elements) return;
 
-        this.setModalMessage(elements.message, state);
-        this.setModalHeaderClass(elements.title, state);
-        this.setSecretWord(elements.secretWordContainer, state, secretWord);
-        this.showModal(elements.modal);
+            this.setModalMessage(elements.message, state);
+            this.setModalHeaderClass(elements.title, state);
+            this.setSecretWord(elements.secretWordContainer, state, secretWord);
+            this.showModal(elements.modal);
+        }, UI_CONFIG.ANIMATION.FLIP_ANIMATION.AWAIT_DELAY);
     }
 
+    resetGame(): void {
+        this.resetCells;
+        this.resetKeys;
+        this.hideModal
+    }
+
+    private hideModal(): void {
+        const elements = this.getModalElements();
+        const modal = elements?.modal;
+        if (!modal) return;
+
+        this.closeModal(modal);
+    }
+
+    private resetCells(): void {
+        const allCells = document.querySelectorAll(UI_CONFIG.SELECTORS.VIRTUAL_CELL);
+
+        allCells.forEach(cell => {
+            cell.textContent = "";
+            cell.classList.remove(...ALL_STATE_CLASSES, 'flip');
+            (cell as HTMLElement).style.animationDelay = '0ms';
+        });
+    }
+
+    private resetKeys(): void {
+        const keys = document.querySelectorAll<HTMLButtonElement>(UI_CONFIG.SELECTORS.VIRTUAL_KEY);
+        keys.forEach(key => key.classList.remove(...ALL_STATE_CLASSES));
+    }
 
     private getModalElements() {
         const modal = document.querySelector(UI_CONFIG.SELECTORS.MODAL_CONTAINER);
@@ -58,12 +99,17 @@ export class UI implements IGameView {
 
     private setSecretWord(element: Element | null, state: GameState, secretWord: string): void {
         if (!element) return;
-        element.textContent = state === GameState.LOST ? secretWord : '';
+        element.textContent = secretWord;
     }
 
     private showModal(modal: Element): void {
         modal.classList.remove(UI_CONFIG.MODAL.CLASSES.HIDDEN);
         modal.classList.add(UI_CONFIG.MODAL.CLASSES.VISIBLE);
+    }
+
+    private closeModal(modal: Element): void {
+        modal.classList.add(UI_CONFIG.MODAL.CLASSES.HIDDEN);
+        modal.classList.remove(UI_CONFIG.MODAL.CLASSES.VISIBLE);
     }
 
 

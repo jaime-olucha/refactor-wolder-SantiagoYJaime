@@ -40,8 +40,8 @@ export const UI_CONFIG = {
     ANIMATION: {
         FLIP_ANIMATION: {
             CLASS: 'flip',
-            FLIP_DELAY: 100,
-            AWAIT_DELAY: (MAX_WORD_SIZE - 1) * 100 + 300 + 50
+            FLIP_DELAY: 150,
+            AWAIT_DELAY: (MAX_WORD_SIZE - 1) * 150 + 300 + 50
         }
     }
 };
