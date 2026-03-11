@@ -1,5 +1,5 @@
-import { LetterState, GameState } from "../../shared/types.js";
-import { MAX_WORD_SIZE } from "../../shared/constants.js";
+import { LetterState, GameState } from "../../domain/types/typesState.js";
+import { MAX_WORD_SIZE } from "../../shared/gameConfig.js";
 export const UI_CONFIG = {
     CSS_CLASSES: {
         [LetterState.CORRECT]: 'cell-green',
@@ -23,6 +23,7 @@ export const UI_CONFIG = {
         }
     },
     SELECTORS: {
+        VIRTUAL_ROW: '.row',
         VIRTUAL_KEY: '.key',
         VIRTUAL_CELL: '.cell',
         MODAL_CONTAINER: '#game-modal',

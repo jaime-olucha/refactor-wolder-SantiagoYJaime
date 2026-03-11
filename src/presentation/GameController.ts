@@ -13,7 +13,7 @@ export class GameController implements IInputHandler {
         this._useCases = useCases;
     }
 
-    public handleInput(key: string): void {
+    handleInput(key: string): void {
         if (this._game.gameState !== GameState.PLAYING) return;
 
         if (key === COMMANDS.ENTER) return this._useCases.submitWord.execute(this._game);
