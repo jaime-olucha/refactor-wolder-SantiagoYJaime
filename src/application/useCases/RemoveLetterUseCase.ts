@@ -3,12 +3,14 @@ import { IGamePresenter } from "../ports/IGamePresenter.js";
 import { IRemoveLetterUseCase } from "../ports/IRemoveLetterUseCase.js";
 
 export class RemoveLetterUseCase implements IRemoveLetterUseCase {
-    constructor(private presenter: IGamePresenter) { }
+    constructor(private readonly _presenter: IGamePresenter) { }
 
-    public execute(game: Game): void {
+    execute(game: Game): void {
         if (game.canRemoveLetter()) {
+            const column = game.currentWord.length - 1;
+            const row = game.guesses.length + 1;
             game.removeLetter();
-            this.presenter.presentLetterRemoved(game.guesses.length + 1, game.currentWord.length);
+            this._presenter.presentLetterRemoved(row, column);
         }
     }
 }

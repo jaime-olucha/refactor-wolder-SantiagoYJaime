@@ -6,6 +6,7 @@ export class InputManager {
         this._controller = controller;
         this.initPhysicalKeyboard();
         this.initVirtualKeyboard();
+        this.initNewGameButtons();
     }
     toUpperKey(key) {
         return normalize(key);
@@ -38,6 +39,15 @@ export class InputManager {
                 const normalizedKey = this.toUpperKey(target.value);
                 this._controller.handleInput(normalizedKey);
                 target.blur();
+            });
+        });
+    }
+    initNewGameButtons() {
+        const buttons = document.querySelectorAll(UI_CONFIG.SELECTORS.PLAY_AGAIN_BTN);
+        buttons.forEach(btn => {
+            btn.addEventListener('click', () => {
+                this._controller.handleRestart();
+                btn.blur();
             });
         });
     }

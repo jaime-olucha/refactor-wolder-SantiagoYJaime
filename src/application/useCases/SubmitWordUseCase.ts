@@ -1,8 +1,7 @@
 import { Game } from "../../domain/entities/Game.js";
 import { IWordValidator } from "../../domain/services/IWordValidator.js";
-import { GameState } from "../../domain/types/typesState.js";
 import { IGamePresenter } from "../ports/IGamePresenter.js";
-import { LetterState } from "../../domain/types/typesState.js";
+import { LetterState, GameState } from "../../domain/types/typesState.js";
 import { ISubmitWordUseCase } from "../ports/ISubmitWordUseCase.js";
 
 export class SubmitWordUseCase implements ISubmitWordUseCase {
@@ -14,7 +13,7 @@ export class SubmitWordUseCase implements ISubmitWordUseCase {
         this._presenter = presenter;
     }
 
-    public execute(game: Game): void {
+    execute(game: Game): void {
         if (!game.canSubmit()) return;
 
         const guess = game.currentWord;

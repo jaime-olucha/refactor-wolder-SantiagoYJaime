@@ -65,4 +65,10 @@ export class Game {
     hasLost() {
         return this._guesses.length >= this._maxAttempts;
     }
+    reset(newSecretWord) {
+        this._secretWord = newSecretWord;
+        this._guesses = [];
+        this.resetCurrentWord();
+        this._gameState = GameState.PLAYING;
+    }
 }

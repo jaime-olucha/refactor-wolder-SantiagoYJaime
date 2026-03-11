@@ -17,4 +17,7 @@ export class GameController {
         if (VALID_KEYS.test(key))
             return this._useCases.addLetter.execute(this._game, key);
     }
+    handleRestart() {
+        this._useCases.resetGame.execute(this._game);
+    }
 }

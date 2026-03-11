@@ -27,7 +27,7 @@ export class Game {
     }
 
     public canAddLetter(): boolean {
-        return !this.isGameOver() && this._currentWord.length < this.maxWordSize;
+        return !this.isGameOver() && this._currentWord.length < this._maxWordSize;
     }
 
     public addLetter(char: string): void {
@@ -75,7 +75,7 @@ export class Game {
     }
 
     private hasLost(): boolean {
-        return this._guesses.length >= this._maxAttempts;
+        return !this.hasWon() && this._guesses.length >= this._maxAttempts;
     }
 
     public reset(newSecretWord: string): void {

@@ -34,6 +34,30 @@ export class UI {
             this.showModal(elements.modal);
         }, UI_CONFIG.ANIMATION.FLIP_ANIMATION.AWAIT_DELAY);
     }
+    resetGame() {
+        this.resetCells();
+        this.resetKeys();
+        this.hideModal();
+    }
+    hideModal() {
+        const elements = this.getModalElements();
+        const modal = elements?.modal;
+        if (!modal)
+            return;
+        this.closeModal(modal);
+    }
+    resetCells() {
+        const allCells = document.querySelectorAll(UI_CONFIG.SELECTORS.VIRTUAL_CELL);
+        allCells.forEach(cell => {
+            cell.textContent = "";
+            cell.classList.remove(...ALL_STATE_CLASSES, UI_CONFIG.ANIMATION.FLIP_ANIMATION.CLASS);
+            cell.style.animationDelay = '0ms';
+        });
+    }
+    resetKeys() {
+        const keys = document.querySelectorAll(UI_CONFIG.SELECTORS.VIRTUAL_KEY);
+        keys.forEach(key => key.classList.remove(...ALL_STATE_CLASSES));
+    }
     getModalElements() {
         const modal = document.querySelector(UI_CONFIG.SELECTORS.MODAL_CONTAINER);
         const title = document.querySelector(UI_CONFIG.SELECTORS.MODAL_HEADER);
@@ -62,6 +86,10 @@ export class UI {
     showModal(modal) {
         modal.classList.remove(UI_CONFIG.MODAL.CLASSES.HIDDEN);
         modal.classList.add(UI_CONFIG.MODAL.CLASSES.VISIBLE);
+    }
+    closeModal(modal) {
+        modal.classList.add(UI_CONFIG.MODAL.CLASSES.HIDDEN);
+        modal.classList.remove(UI_CONFIG.MODAL.CLASSES.VISIBLE);
     }
     getCell(row, column) {
         const rows = document.querySelectorAll(UI_CONFIG.SELECTORS.VIRTUAL_ROW);

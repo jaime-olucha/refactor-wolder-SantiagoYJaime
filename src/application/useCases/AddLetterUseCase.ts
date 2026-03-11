@@ -3,12 +3,14 @@ import { IAddLetterUseCase } from "../ports/IAddLetterUseCase.js";
 import { IGamePresenter } from "../ports/IGamePresenter.js";
 
 export class AddLetterUseCase implements IAddLetterUseCase {
-    constructor(private presenter: IGamePresenter) { }
+    constructor(private readonly _presenter: IGamePresenter) { }
 
-    public execute(game: Game, letter: string): void {
+    execute(game: Game, letter: string): void {
         if (game.canAddLetter()) {
+            const column = game.currentWord.length;
+            const row = game.guesses.length + 1;
             game.addLetter(letter);
-            this.presenter.presentLetterAdded(game.guesses.length + 1, game.currentWord.length - 1, letter);
+            this._presenter.presentLetterAdded(row, column, letter);
         }
     }
 }

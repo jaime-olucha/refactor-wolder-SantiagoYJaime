@@ -19,4 +19,7 @@ export class GamePresenter {
     presentGameOver(state, secretWord) {
         this._view.showGameOver(state, secretWord);
     }
+    presentGameReset() {
+        this._view.resetGame();
+    }
 }
