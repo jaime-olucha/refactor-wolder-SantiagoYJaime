@@ -1,3 +1,4 @@
+import { LetterState } from "../../domain/types/typesState.js";
 import { UI_CONFIG, ALL_STATE_CLASSES } from "../config/uiConfig.js";
 export class UI {
     drawLetter(row, column, letter) {
@@ -19,8 +20,17 @@ export class UI {
         const delay = column * UI_CONFIG.ANIMATION.FLIP_ANIMATION.FLIP_DELAY;
         setTimeout(() => {
             const button = document.querySelector(`${UI_CONFIG.SELECTORS.VIRTUAL_KEY}[value="${key.toUpperCase()}"]`);
-            if (button)
-                this.applyStateClass(button, state);
+            if (!button)
+                return;
+            const classCorrect = UI_CONFIG.CSS_CLASSES[LetterState.CORRECT];
+            const classPresent = UI_CONFIG.CSS_CLASSES[LetterState.PRESENT];
+            const isCurrentlyCorrect = button.classList.contains(classCorrect);
+            const isCurrentlyPresent = button.classList.contains(classPresent);
+            if (isCurrentlyCorrect)
+                return;
+            if (isCurrentlyPresent && state !== LetterState.CORRECT)
+                return;
+            this.applyStateClass(button, state);
         }, delay);
     }
     showGameOver(state, secretWord) {
@@ -39,13 +49,6 @@ export class UI {
         this.resetKeys();
         this.hideModal();
     }
-    hideModal() {
-        const elements = this.getModalElements();
-        const modal = elements?.modal;
-        if (!modal)
-            return;
-        this.closeModal(modal);
-    }
     resetCells() {
         const allCells = document.querySelectorAll(UI_CONFIG.SELECTORS.VIRTUAL_CELL);
         allCells.forEach(cell => {
@@ -57,6 +60,21 @@ export class UI {
     resetKeys() {
         const keys = document.querySelectorAll(UI_CONFIG.SELECTORS.VIRTUAL_KEY);
         keys.forEach(key => key.classList.remove(...ALL_STATE_CLASSES));
+    }
+    hideModal() {
+        const elements = this.getModalElements();
+        const modal = elements?.modal;
+        if (!modal)
+            return;
+        this.closeModal(modal);
+    }
+    showModal(modal) {
+        modal.classList.remove(UI_CONFIG.MODAL.CLASSES.HIDDEN);
+        modal.classList.add(UI_CONFIG.MODAL.CLASSES.VISIBLE);
+    }
+    closeModal(modal) {
+        modal.classList.add(UI_CONFIG.MODAL.CLASSES.HIDDEN);
+        modal.classList.remove(UI_CONFIG.MODAL.CLASSES.VISIBLE);
     }
     getModalElements() {
         const modal = document.querySelector(UI_CONFIG.SELECTORS.MODAL_CONTAINER);
@@ -82,14 +100,6 @@ export class UI {
         if (!element)
             return;
         element.textContent = secretWord;
-    }
-    showModal(modal) {
-        modal.classList.remove(UI_CONFIG.MODAL.CLASSES.HIDDEN);
-        modal.classList.add(UI_CONFIG.MODAL.CLASSES.VISIBLE);
-    }
-    closeModal(modal) {
-        modal.classList.add(UI_CONFIG.MODAL.CLASSES.HIDDEN);
-        modal.classList.remove(UI_CONFIG.MODAL.CLASSES.VISIBLE);
     }
     getCell(row, column) {
         const rows = document.querySelectorAll(UI_CONFIG.SELECTORS.VIRTUAL_ROW);

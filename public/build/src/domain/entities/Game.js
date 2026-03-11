@@ -18,11 +18,8 @@ export class Game {
     get guesses() { return [...this._guesses]; }
     get maxAttempts() { return this._maxAttempts; }
     get maxWordSize() { return this._maxWordSize; }
-    isGameOver() {
-        return this._gameState !== GameState.PLAYING;
-    }
     canAddLetter() {
-        return !this.isGameOver() && this._currentWord.length < this.maxWordSize;
+        return !this.isGameOver() && this._currentWord.length < this._maxWordSize;
     }
     addLetter(char) {
         if (this.canAddLetter())
@@ -45,6 +42,15 @@ export class Game {
         this.updateGameState();
         this.resetCurrentWord();
     }
+    reset(newSecretWord) {
+        this._secretWord = newSecretWord;
+        this._guesses = [];
+        this.resetCurrentWord();
+        this._gameState = GameState.PLAYING;
+    }
+    isGameOver() {
+        return this._gameState !== GameState.PLAYING;
+    }
     registerGuess() {
         this._guesses.push(this._currentWord);
     }
@@ -63,12 +69,6 @@ export class Game {
         return this._currentWord === this._secretWord;
     }
     hasLost() {
-        return this._guesses.length >= this._maxAttempts;
-    }
-    reset(newSecretWord) {
-        this._secretWord = newSecretWord;
-        this._guesses = [];
-        this.resetCurrentWord();
-        this._gameState = GameState.PLAYING;
+        return !this.hasWon() && this._guesses.length >= this._maxAttempts;
     }
 }

@@ -9,10 +9,6 @@ export class GamePresenter {
     presentLetterRemoved(row, column) {
         this._view.deleteLetter(row, column);
     }
-    presentLetterState(row, column, state, letter) {
-        this._view.changeCellState(row, column, state);
-        this._view.changeKeyState(letter, state, column);
-    }
     presentWordValidated(row, states, guess) {
         states.forEach((state, column) => this.presentLetterState(row, column, state, guess[column]));
     }
@@ -21,5 +17,9 @@ export class GamePresenter {
     }
     presentGameReset() {
         this._view.resetGame();
+    }
+    presentLetterState(row, column, state, letter) {
+        this._view.changeCellState(row, column, state);
+        this._view.changeKeyState(letter, state, column);
     }
 }

@@ -28,5 +28,4 @@ document.addEventListener('DOMContentLoaded', () => {
     const game = new Game(secretWord);
     const controller = new GameController(game, useCases);
     new InputManager(controller);
-    console.log(`${secretWord}`);
 });

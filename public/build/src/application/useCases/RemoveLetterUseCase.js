@@ -1,12 +1,14 @@
 export class RemoveLetterUseCase {
-    presenter;
-    constructor(presenter) {
-        this.presenter = presenter;
+    _presenter;
+    constructor(_presenter) {
+        this._presenter = _presenter;
     }
     execute(game) {
         if (game.canRemoveLetter()) {
+            const column = game.currentWord.length - 1;
+            const row = game.guesses.length + 1;
             game.removeLetter();
-            this.presenter.presentLetterRemoved(game.guesses.length + 1, game.currentWord.length);
+            this._presenter.presentLetterRemoved(row, column);
         }
     }
 }
