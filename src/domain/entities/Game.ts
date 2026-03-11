@@ -22,10 +22,6 @@ export class Game {
     get maxAttempts(): number { return this._maxAttempts; }
     get maxWordSize(): number { return this._maxWordSize; }
 
-    private isGameOver(): boolean {
-        return this._gameState !== GameState.PLAYING
-    }
-
     public canAddLetter(): boolean {
         return !this.isGameOver() && this._currentWord.length < this._maxWordSize;
     }
@@ -54,6 +50,19 @@ export class Game {
         this.resetCurrentWord();
     }
 
+    public reset(newSecretWord: string): void {
+        this._secretWord = newSecretWord;
+        this._guesses = [];
+        this.resetCurrentWord();
+        this._gameState = GameState.PLAYING;
+    }
+
+
+
+    private isGameOver(): boolean {
+        return this._gameState !== GameState.PLAYING
+    }
+
     private registerGuess(): void {
         this._guesses.push(this._currentWord);
     }
@@ -77,12 +86,4 @@ export class Game {
     private hasLost(): boolean {
         return !this.hasWon() && this._guesses.length >= this._maxAttempts;
     }
-
-    public reset(newSecretWord: string): void {
-        this._secretWord = newSecretWord;
-        this._guesses = [];
-        this.resetCurrentWord();
-        this._gameState = GameState.PLAYING;
-    }
-
 }   

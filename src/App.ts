@@ -23,7 +23,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const addLetterUseCase = new AddLetterUseCase(presenter);
     const removeLetterUseCase = new RemoveLetterUseCase(presenter);
     const submitWordUseCase = new SubmitWordUseCase(validator, presenter);
-    const resetGameUseCase = new ResetGameUseCase(repository, presenter)
+    const resetGameUseCase = new ResetGameUseCase(repository, presenter);
 
     const useCases: IGameUseCases = {
         addLetter: addLetterUseCase,

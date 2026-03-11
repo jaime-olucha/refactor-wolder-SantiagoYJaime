@@ -17,11 +17,6 @@ export class GamePresenter implements IGamePresenter {
         this._view.deleteLetter(row, column);
     }
 
-    presentLetterState(row: number, column: number, state: LetterState, letter: string): void {
-        this._view.changeCellState(row, column, state);
-        this._view.changeKeyState(letter, state, column);
-    }
-
     presentWordValidated(row: number, states: LetterState[], guess: string): void {
         states.forEach((state, column) => this.presentLetterState(row, column, state, guess[column]));
     }
@@ -32,5 +27,10 @@ export class GamePresenter implements IGamePresenter {
 
     presentGameReset(): void {
         this._view.resetGame();
+    }
+
+    private presentLetterState(row: number, column: number, state: LetterState, letter: string): void {
+        this._view.changeCellState(row, column, state);
+        this._view.changeKeyState(letter, state, column);
     }
 }

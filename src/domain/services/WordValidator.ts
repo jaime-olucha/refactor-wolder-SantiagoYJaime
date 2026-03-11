@@ -3,7 +3,7 @@ import { IWordValidator } from "./IWordValidator.js";
 
 export class WordValidator implements IWordValidator {
     
-    public validate(guess: string, target: string): LetterState[] {
+    validate(guess: string, target: string): LetterState[] {
         const result: LetterState[] = Array(target.length).fill(LetterState.ABSENT);
         const targetLetters = target.split("");
         const guessLetters = guess.split("");
@@ -15,6 +15,8 @@ export class WordValidator implements IWordValidator {
         return result;
     }
 
+
+    
     private markCorrectLetters(guess: string[], target: string[], result: LetterState[]): void {
         guess.forEach((letter, i) => {
             if (letter !== "" && letter === target[i]) {

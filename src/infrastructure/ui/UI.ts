@@ -48,16 +48,9 @@ export class UI implements IGameView {
     resetGame(): void {
         this.resetCells();
         this.resetKeys();
-        this.hideModal()
+        this.hideModal();
     }
 
-    private hideModal(): void {
-        const elements = this.getModalElements();
-        const modal = elements?.modal;
-        if (!modal) return;
-
-        this.closeModal(modal);
-    }
 
     private resetCells(): void {
         const allCells = document.querySelectorAll(UI_CONFIG.SELECTORS.VIRTUAL_CELL);
@@ -72,6 +65,24 @@ export class UI implements IGameView {
     private resetKeys(): void {
         const keys = document.querySelectorAll<HTMLButtonElement>(UI_CONFIG.SELECTORS.VIRTUAL_KEY);
         keys.forEach(key => key.classList.remove(...ALL_STATE_CLASSES));
+    }
+
+    private hideModal(): void {
+        const elements = this.getModalElements();
+        const modal = elements?.modal;
+        if (!modal) return;
+
+        this.closeModal(modal);
+    }
+
+    private showModal(modal: Element): void {
+        modal.classList.remove(UI_CONFIG.MODAL.CLASSES.HIDDEN);
+        modal.classList.add(UI_CONFIG.MODAL.CLASSES.VISIBLE);
+    }
+
+    private closeModal(modal: Element): void {
+        modal.classList.add(UI_CONFIG.MODAL.CLASSES.HIDDEN);
+        modal.classList.remove(UI_CONFIG.MODAL.CLASSES.VISIBLE);
     }
 
     private getModalElements() {
@@ -101,17 +112,6 @@ export class UI implements IGameView {
         if (!element) return;
         element.textContent = secretWord;
     }
-
-    private showModal(modal: Element): void {
-        modal.classList.remove(UI_CONFIG.MODAL.CLASSES.HIDDEN);
-        modal.classList.add(UI_CONFIG.MODAL.CLASSES.VISIBLE);
-    }
-
-    private closeModal(modal: Element): void {
-        modal.classList.add(UI_CONFIG.MODAL.CLASSES.HIDDEN);
-        modal.classList.remove(UI_CONFIG.MODAL.CLASSES.VISIBLE);
-    }
-
 
     private getCell(row: number, column: number): HTMLElement | null {
         const rows = document.querySelectorAll(UI_CONFIG.SELECTORS.VIRTUAL_ROW);
