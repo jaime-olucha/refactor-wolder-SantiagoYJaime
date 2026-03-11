@@ -1,5 +1,5 @@
 import { IGamePresenter } from "../application/ports/IGamePresenter.js";
-import { IGameView } from "./views/IGameView.js";
+import { IGameView } from "./ports/IGameView.js";
 import { LetterState, GameState } from "../domain/types/typesState.js";
 
 export class GamePresenter implements IGamePresenter {

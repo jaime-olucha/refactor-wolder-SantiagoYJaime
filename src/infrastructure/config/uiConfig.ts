@@ -27,6 +27,7 @@ export const UI_CONFIG = {
     },
 
     SELECTORS: {
+        VIRTUAL_ROW: '.row',
         VIRTUAL_KEY: '.key',
         VIRTUAL_CELL: '.cell',
         MODAL_CONTAINER: '#game-modal',
