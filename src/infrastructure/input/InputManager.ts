@@ -1,15 +1,15 @@
-import { UI_CONFIG } from "./config/uiConfig.js";
-import { normalize } from "../shared/utils.js";
+import { IInputHandler } from "../../presentation/ports/IInputHandler.js";
+import { normalize } from "../../shared/utils.js";
+import { UI_CONFIG } from "../config/uiConfig.js"; 
 
 export class InputManager {
+    private readonly _controller: IInputHandler;
 
-    constructor(
-        private onKeyPress: (key: string) => void,
-        private onNewGame: () => void
-    ) {
+    constructor(controller: IInputHandler) {
+        this._controller = controller;
         this.initPhysicalKeyboard();
         this.initVirtualKeyboard();
-        this.initNewGameButton();
+        this.initNewGameButtons();
     }
 
     private toUpperKey(key: string): string {
@@ -23,39 +23,44 @@ export class InputManager {
 
     private initPhysicalKeyboard(): void {
         document.addEventListener("keydown", (event: KeyboardEvent) => {
-            this.onKeyPress(this.toUpperKey(event.key));
+            const normalizedKey = this.toUpperKey(event.key);
+            
+            this._controller.handleInput(normalizedKey);
 
             const virtualButton = this.getVirtualButton(event.key);
-            if (!virtualButton) return
-            virtualButton.classList.add(UI_CONFIG.MODAL.CLASSES.KEY_ACTIVE);
+            if (virtualButton) {
+                virtualButton.classList.add(UI_CONFIG.MODAL.CLASSES.KEY_ACTIVE);
+            }
         });
 
         document.addEventListener("keyup", (event: KeyboardEvent) => {
             const virtualButton = this.getVirtualButton(event.key);
-            if (!virtualButton) return
-            virtualButton.classList.remove(UI_CONFIG.MODAL.CLASSES.KEY_ACTIVE);
+            if (virtualButton) {
+                virtualButton.classList.remove(UI_CONFIG.MODAL.CLASSES.KEY_ACTIVE);
+            }
         });
     }
 
     private initVirtualKeyboard(): void {
         const virtualKeys = document.querySelectorAll(UI_CONFIG.SELECTORS.VIRTUAL_KEY);
+        
         virtualKeys.forEach(button => {
             button.addEventListener("click", (event) => {
                 const target = event.target as HTMLButtonElement;
-                const normalizedKey = this.toUpperKey(target.value)
-                this.onKeyPress(normalizedKey);
-                target.blur();
+                const normalizedKey = this.toUpperKey(target.value);
+                
+                this._controller.handleInput(normalizedKey);
+                target.blur(); 
             });
         });
     }
 
-    private initNewGameButton(): void {
+    private initNewGameButtons(): void {
         const buttons = document.querySelectorAll(UI_CONFIG.SELECTORS.PLAY_AGAIN_BTN);
-        buttons.forEach(button => {
-            button.addEventListener("click", (event) => {
-                const target = event.target as HTMLButtonElement;
-                this.onNewGame()
-                target.blur();
+        buttons.forEach(btn => {
+            btn.addEventListener('click', () => {
+                this._controller.handleRestart();
+                (btn as HTMLElement).blur();
             });
         });
     }

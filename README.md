@@ -3,10 +3,6 @@
 > Refactorización del juego Wordle aplicando principios **Clean Code** y **SOLID** en TypeScript.  
 > Proyecto de formación 480 · Santiago & Jaime
 
----
-<p><a href="https://jaime-olucha.github.io/refactor-wolder-SantiagoYJaime/README-arquitectura-wordle.html">Ver estructura de carpetas interactiva</a></p>
----
-
 ## 🚀 Cómo ejecutar
 
 ```bash
@@ -23,238 +19,117 @@ Abre el navegador en [http://localhost:3000](http://localhost:3000)
 ```
 📦 refactor-wolder-SantiagoYJaime
 │
-├── 📂 public/
-│   ├── 📂 style/
-│   │   ├── fondo.png
-│   │   └── style.css
-│   └── index.html
+├── 📄 index.html                <-- Esqueleto visual de la app
+├── 📁 style/
+│   └── 📄 style.css             <-- Estilos y variables CSS
 │
-├── 📂 src/
+├── 📁 src/
+│   ├── 📄 app.ts                <-- COMPOSITION ROOT (Ensamblador)
 │   │
-│   ├── 📂 domain/              🧠 Lógica pura · Sin DOM · Sin CSS
-│   │   ├── Game.ts
-│   │   ├── WordProvider.ts
-│   │   └── WordValidator.ts
+│   ├── 📁 domain/               <-- 🟡 DOMAIN (Lógica de negocio pura)
+│   │   ├── 📁 entities/
+│   │   ├── 📁 repositories/
+│   │   ├── 📁 services/
+│   │   └── 📁 types/
 │   │
-│   ├── 📂 infrastructure/      🖥️ DOM, Eventos y Visual
-│   │   ├── 📂 config/
-│   │   │   └── uiConfig.ts
-│   │   ├── InputManager.ts
-│   │   └── UI.ts
+│   ├── 📁 application/          <-- 🔴 APLICACION (CASOS DE USO)
+│   │   ├── 📁 ports/
+│   │   └── 📁 useCases/
 │   │
-│   ├── 📂 shared/              🤝 Contratos, Interfaces y Constantes
-│   │   ├── constants.ts
-│   │   ├── IGameUI.ts
-│   │   ├── IWordProvider.ts
-│   │   ├── IWordValidator.ts
-│   │   ├── types.ts
-│   │   └── utils.ts
+│   ├── 📁 presentation/         <-- 🟢 PRESENTACION (Los adaptadores)
+│   │   └── 📁 ports/
 │   │
-│   └── App.ts                  ⚡ Entry Point · Orquestador
-│
+│   ├── 📁 infrastructure/       <-- 🔵 INFRASTRUCTURA (DOM, DBs...)
+│   │   ├── 📁 config/
+│   │   ├── 📁 input/
+│   │   ├── 📁 repositories/
+│   │   └── 📁 ui/
+│   │
+│   └── 📁 shared/               <-- ⚪ SHARED (código transversal)
+│       ├── 📄 gameConfig.ts
+│       └── 📄 utils.ts
 └── package.json
 ```
 
 ---
 
-## ⚡ App.ts — Entry Point
+##  1. Capa de Dominio
 
-Crea todas las instancias e inyecta las dependencias entre capas. Punto de arranque de la SPA.
+Es el corazón de la aplicación. No importa (import) absolutamente nada de otras capas. Aquí residen las reglas matemáticas e inmutables del juego.
 
-```ts
-const wordProvider = new WordProvider(WORDS_DB);
-const validator    = new WordValidator();
-const ui           = new UI();
-const game         = new Game(wordProvider, validator, ui);
+- `entities/Game.ts`: La Entidad principal. Gestiona su propio estado interno (intentos, palabra actual, si se ha ganado o perdido) mediante encapsulamiento estricto y métodos defensivos. Excluye cualquier lógica externa.
 
-new InputManager(handleKeyPress, () => game.reset());
-```
+- `services/WordValidator.ts`: Contiene el algoritmo core del juego. Compara el intento del usuario con la palabra secreta manejando casos complejos (como letras repetidas) devolviendo un array de estados (CORRECT, PRESENT, ABSENT).
 
----
+- `repositories/IWordRepository.ts` & `services/IWordValidator.ts`: Interfaces puras (Puertos). Definen los contratos que el dominio necesita para sobrevivir, sin importarle quién los implemente.
 
-## 🧠 src/domain — Lógica pura
-
-> Esta capa **no sabe que existe el navegador**. Sin HTML, sin CSS, sin eventos.
-
-### 📄 Game.ts
-
-Máquina de estados del juego. Orquesta turnos, letras y el ciclo victoria/derrota.  
-Solo conoce las **interfaces**, nunca las clases concretas.
-
-| Tipo | Método / Propiedad | Descripción |
-|------|-------------------|-------------|
-| `private` | `_secretWord: string` | Palabra secreta de la partida |
-| `private` | `_currentWord: string` | Letras escritas en el turno actual |
-| `private` | `_currentRow: number` | Fila activa (1–6) |
-| `private` | `_currentCol: number` | Columna activa (0–4) |
-| `private` | `_gameState: GameState` | Estado actual: PLAYING / WON / LOST |
-| `private` | `_validator: IWordValidator` | Inyectado por constructor |
-| `private` | `_ui: IGameUI` | Inyectado por constructor |
-| `private` | `_wordProvider: IWordProvider` | Inyectado por constructor |
-| `public` | `addLetter(char)` | Añade letra si la partida está activa y col < 5. Llama `_ui.drawLetter()` |
-| `public` | `removeLetter()` | Borra la última letra. Actualiza `_currentWord`. Llama `_ui.deleteLetter()` |
-| `public` | `submitWord()` | Valida 5 letras, aplica estados, detecta victoria/derrota, avanza turno |
-| `public` | `reset()` | Reinicia el estado interno y llama `_ui.resetBoard()` |
-| `private` | `isGameActive()` | Devuelve `true` si `_gameState === PLAYING` |
+- `types/typesState.ts`: Enums que definen los estados posibles de las letras y del propio juego.
 
 ---
 
-### 📄 WordValidator.ts
+##  2. Capa de Aplicación
 
-Servicio **puro sin estado**. Calcula el resultado de cada intento.  
-✅ Resuelve el bug de **letras repetidas**.
+Contiene los "Casos de Uso", los trabajadores que orquestan el flujo de información utilizando las piezas del Dominio.
 
-| Tipo | Método | Descripción |
-|------|--------|-------------|
-| `public` | `validate(guess, target) → LetterState[]` | 1º marca verdes (CORRECT), 2º marca naranjas (PRESENT) evitando duplicados |
-| `private` | `markCorrectLetters(guess[], target[], result[])` | Primera pasada: coincidencias exactas |
-| `private` | `markPresentLetters(guess[], target[], result[])` | Segunda pasada: letras presentes en otra posición |
+- `useCases/AddLetterUseCase.ts`, `RemoveLetterUseCase.ts`, `SubmitWordUseCase.ts`, `ResetGameUseCase.ts`: Cada archivo tiene una única responsabilidad (SRP). Reciben el juego, ejecutan la acción permitida en el dominio y avisan al Presentador del resultado.
 
-> Implementa: `IWordValidator`
+- `ports/IGameUseCases.ts`: Actúa como un Input Boundary o Fachada. Agrupa todos los casos de uso para evitar inyectar múltiples dependencias en el Controlador.
+
+- `ports/IGamePresenter.ts`: El Output Port. El contrato que obliga a la siguiente capa a saber cómo comunicar los cambios visuales.
 
 ---
 
-### 📄 WordProvider.ts
+##  3. Capa de Presentación
 
-Gestiona el banco de palabras. Recibe el array por **inyección de dependencias**.
+Son los traductores. Transforman los estímulos externos en formato que la Aplicación entienda, y viceversa.
 
-| Tipo | Método | Descripción |
-|------|--------|-------------|
-| `constructor` | `constructor(words: string[])` | Recibe el array de palabras |
-| `public` | `getRandomWord() → string` | `Math.floor(Math.random() * words.length)` → `toUpperCase()` |
+- `GameController.ts`: Implementa IInputHandler. Recibe teclas normalizadas (del InputManager) y decide qué Caso de Uso debe ejecutarse (ENTER, BACKSPACE o letra).
 
-> Implementa: `IWordProvider`
+- `GamePresenter.ts`: Implementa IGamePresenter. Recibe datos crudos de los Casos de Uso (ej: fila 1, columna 2, estado CORRECT) y ordena a la Vista (`IGameView`) cómo y dónde pintarlo.
 
----
-
-## 🖥️ src/infrastructure — DOM, Eventos y Visual
-
-> Única capa que toca el DOM (`document`, `addEventListener`, etc.).
-
-### 📄 UI.ts
-
-Implementa `IGameUI`. Dibuja letras, aplica animaciones flip, gestiona estados del teclado visual y el modal de fin de partida.
-
-| Tipo | Método | Descripción |
-|------|--------|-------------|
-| `public` | `drawLetter(row, col, letter)` | Escribe la letra en la celda del DOM |
-| `public` | `deleteLetter(row, col)` | Limpia `textContent` de la celda |
-| `public` | `changeCellState(row, col, state)` | Aplica animación flip + clase CSS de color |
-| `public` | `changeKeyState(key, state)` | Actualiza el color de la tecla virtual (respeta jerarquía CORRECT > PRESENT) |
-| `public` | `onGameOver(state, secretWord)` | Muestra el modal de victoria o derrota |
-| `public` | `resetBoard()` | Llama a `resetCells()` + `resetKeys()` |
-| `public` | `hideModal()` | Oculta el modal de fin de partida |
-| `private` | `getCellElement(row, col)` | Obtiene el elemento HTML de una celda |
-| `private` | `getModalElement()` | Obtiene el elemento HTML del modal |
-| `private` | `setElementState(el, state)` | Aplica la clase CSS correspondiente al estado |
-| `private` | `resetCells()` | Limpia todas las celdas del tablero |
-| `private` | `resetKeys()` | Limpia todos los colores del teclado virtual |
-
-> Implementa: `IGameUI`
+- `ports/IGameView.ts` & `IInputHandler.ts`: Contratos que separan a los traductores de la tecnología real de infraestructura.
 
 ---
 
-### 📄 InputManager.ts
+##  4. Capa de Infraestructura
 
-Gestiona todos los eventos de entrada: teclado físico (`keydown`/`keyup`), teclado virtual (`click`) y botón nueva partida.
+Aquí es donde el código se ensucia las manos con la tecnología específica (El DOM del navegador). Es la capa más volátil y fácil de reemplazar.
 
-| Tipo | Método | Descripción |
-|------|--------|-------------|
-| `constructor` | `onKeyPress: (key) => void` | Callback inyectado para manejar teclas |
-| `constructor` | `onNewGame: () => void` | Callback inyectado para nueva partida |
-| `private` | `initPhysicalKeyboard()` | Escucha `keydown`/`keyup` en el documento |
-| `private` | `initVirtualKeyboard()` | Escucha `click` en cada botón del teclado visual |
-| `private` | `initNewGameButton()` | Escucha `click` en el botón de nueva partida |
-| `private` | `toUpperKey(key)` | Normaliza la tecla llamando a `normalize()` |
-| `private` | `getVirtualButton(key)` | Busca el botón HTML del teclado virtual |
+- `ui/UI.ts`: Implementa `IGameView`. Es un Director de Orquesta (Patrón Fachada). 
 
----
+- `input/InputManager.ts`: Escucha eventos físicos (keydown) y virtuales (clics en pantalla), los normaliza y los pasa al Controlador.
 
-### 📄 config/uiConfig.ts
+- `repositories/LocalWordRepository.ts`: Implementa `IWordRepository`. Es la "Base de Datos" actual, devolviendo palabras de un array local.
 
-Centraliza todos los **magic strings** del DOM: selectores CSS, clases de estado, tiempos de animación y textos del modal.
+- `config/uiConfig.ts`: Centraliza todos los selectores CSS, clases y tiempos de animación. Elimina los Magic Strings del código de UI.
 
-| Constante | Contenido |
-|-----------|-----------|
-| `UI_CONFIG.SELECTORS` | `.VIRTUAL_CELL`, `.VIRTUAL_KEY`, `.PLAY_AGAIN_BTN`, `.MODAL_HEADER`, `.MODAL_MESSAGE`, `.MODAL_SECRET_WORD` |
-| `UI_CONFIG.CSS_CLASSES` | Mapea `LetterState` → clase CSS (`cell-correct`, `cell-present`, etc.) |
-| `UI_CONFIG.ANIMATION.FLIP_ANIMATION` | `.CLASS`, `.COLUMN_DELAY`, `.CELL_DELAY`, `.AWAIT_DELAY` |
-| `UI_CONFIG.MODAL` | `.CLASSES`, `.MESSAGES`, `.HEADER_CLASSES` |
-| `ALL_STATE_CLASSES` | Array con todas las clases de estado para limpiar elementos |
+--- 
+
+## 5. App.ts
+
+Es el único archivo del proyecto autorizado para romper el principio de Inversión de Dependencias (DIP). Su única función es instanciar las implementaciones concretas de la Infraestructura, inyectarlas en los Casos de Uso y Controladores, arrancar el juego y ceder el control.
 
 ---
 
-## 🤝 src/shared — Contratos, Interfaces y Constantes
+## Decisiones Arquitectónicas y Posibles Refactorizaciones (Tech Debt)
 
-> Sin lógica. Solo las reglas de comunicación entre capas.
+Durante el desarrollo, hemos llevado el código al límite del Clean Code. Hemos identificado y debatido las siguientes áreas que podrían evolucionar en futuras iteraciones para alcanzar un purismo aún más extremo:
 
-### 📄 IGameUI.ts
+1. **CQRS vs. Interfaces de Casos de Uso Específicos**
+- Estado Actual: Tenemos interfaces específicas para cada caso de uso y un aglutinador (`IGameUseCases`). Esto prioriza la legibilidad y el Principio de Segregación de Interfaces (ISP).
 
-Contrato del renderer visual. `Game` solo depende de esta interfaz, nunca de `UI` directamente.
+- Posible Refactor (Nivel Enterprise): Implementar una interfaz genérica `IUseCase<TRequest, TResponse>` obligando a que cada caso de uso reciba un único objeto `Input/Command` (DTO). Esto facilitaría la creación de Middlewares (para logs o métricas de rendimiento) pero añadiría verbosidad al empaquetar variables simples.
 
-```ts
-interface IGameUI {
-    drawLetter(row: number, col: number, letter: string): void;
-    deleteLetter(row: number, col: number): void;
-    changeCellState(row: number, col: number, state: LetterState): void;
-    changeKeyState(key: string, state: LetterState): void;
-    onGameOver(state: GameState, secretWord: string): void;
-    resetBoard(): void;
-}
-```
+2. **UI Facade vs. Componentes Desacoplados**
+- Estado Actual: `UI.ts` actúa como una fachada que implementa `IGameView`.
 
-### 📄 IWordProvider.ts
+- Posible Refactor: La interfaz `IGameView` podría dividirse usando el Principio de Segregación de Interfaces (ISP) mediante herencia de capacidades (`export interface IGameView extends ICanDrawGrid, ICanShowAlerts...`). Esto blindaría aún más al Presentador, aunque para un proyecto de alcance front-end puro, la fachada actual mantiene el equilibrio perfecto entre purismo y pragmatismo (evitando el Delegation Tax excesivo).
 
-```ts
-interface IWordProvider {
-    getRandomWord(): string;
-}
-```
+3. **Responsabilidad del GameController**
+- Estado Actual: El `GameController` incluye una pequeña validación: `if (this._game.gameState !== GameState.PLAYING) return;`.
 
-### 📄 IWordValidator.ts
+- Posible Refactor: Desde una visión ultra-ortodoxa de la Clean Architecture, el Controlador debería ser completamente "tonto" y limitarse a rutear. Esta validación pertenece estrictamente a las reglas de negocio (Dominio/Casos de Uso). Moverla eliminaría esa fuga de lógica, aunque actualmente sirve como un parche defensivo eficiente en la capa de UI.
 
-```ts
-interface IWordValidator {
-    validate(guess: string, target: string): LetterState[];
-}
-```
-
-### 📄 types.ts
-
-```ts
-enum LetterState { CORRECT, PRESENT, ABSENT }
-enum GameState   { PLAYING, WON, LOST }
-```
-
-### 📄 constants.ts
-
-```ts
-MAX_WORD_SIZE = 5
-MAX_ATTEMPTS  = 6
-VALID_KEYS    = ['A', 'B', ... 'Z', 'Ñ']
-COMMANDS      = { ENTER, BACKSPACE }
-WORDS_DB      = [ ...banco de palabras... ]
-```
-
-### 📄 utils.ts
-
-| Función | Descripción |
-|---------|-------------|
-| `normalize(key: string) → string` | Convierte teclas físicas a mayúsculas. Gestiona tildes, Ñ, ENTER y BACKSPACE |
-
----
-
-## 🏛️ Principios SOLID aplicados
-
-| Principio | Cómo se aplica |
-|-----------|---------------|
-| **S** — Single Responsibility | Cada clase tiene una sola responsabilidad: `UI` dibuja, `Game` orquesta, `WordValidator` valida, `InputManager` gestiona eventos |
-| **O** — Open/Closed | `Game` no necesita cambiar si se sustituye `UI` o `WordValidator` por otra implementación |
-| **L** — Liskov Substitution | `UI` implementa completamente `IGameUI` sin romper el contrato |
-| **I** — Interface Segregation | Interfaces pequeñas y específicas: `IGameUI`, `IWordProvider`, `IWordValidator` |
-| **D** — Dependency Inversion | `Game` depende de abstracciones (interfaces), no de clases concretas |
-
----
 
 ## 🐛 Bugs corregidos respecto al original
 

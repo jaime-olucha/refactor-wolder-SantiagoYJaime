@@ -1,24 +1,39 @@
-import { WordProvider } from "./domain/WordProvider.js";
-import { WordValidator } from "./domain/WordValidator.js";
-import { Game } from "./domain/Game.js";
-import { UI } from "./infrastructure/UI.js";
-import { InputManager } from "./infrastructure/InputManager.js";
-import { VALID_KEYS, COMMANDS, WORDS_DB } from "./shared/constants.js";
+import { LocalWordRepository } from "./infrastructure/repositories/LocalWordRepository.js";
+import { UI } from "./infrastructure/ui/UI.js";
+import { GamePresenter } from "./presentation/GamePresenter.js";
+import { WordValidator } from "./domain/services/WordValidator.js";
+import { AddLetterUseCase } from "./application/useCases/AddLetterUseCase.js";
+import { RemoveLetterUseCase } from "./application/useCases/RemoveLetterUseCase.js";
+import { SubmitWordUseCase } from "./application/useCases/SubmitWordUseCase.js";
+import { ResetGameUseCase } from "./application/useCases/ResetGameUseCase.js";
+import { Game } from "./domain/entities/Game.js";
+import { GameController } from "./presentation/GameController.js";
+import { InputManager } from "./infrastructure/input/InputManager.js";
+import { IGameUseCases } from "./application/ports/IGameUseCases.js";
 
-const wordProvider = new WordProvider(WORDS_DB);
-const validator = new WordValidator();
-const ui = new UI();
-const game = new Game(wordProvider, validator, ui);
+document.addEventListener('DOMContentLoaded', () => {
 
-const commands: Record<string, () => void> = {
-    [COMMANDS.ENTER]: () => game.submitWord(),
-    [COMMANDS.BACKSPACE]: () => game.removeLetter()
-};
+    const repository = new LocalWordRepository();
+    const view = new UI();
 
-const handleKeyPress = (key: string): void => {
-    if (commands[key]) return commands[key]();
-    if (VALID_KEYS.includes(key)) return game.addLetter(key);
-}
+    const presenter = new GamePresenter(view);
 
-new InputManager(handleKeyPress, () => game.reset());
+    const validator = new WordValidator();
 
+    const addLetterUseCase = new AddLetterUseCase(presenter);
+    const removeLetterUseCase = new RemoveLetterUseCase(presenter);
+    const submitWordUseCase = new SubmitWordUseCase(validator, presenter);
+    const resetGameUseCase = new ResetGameUseCase(repository, presenter);
+
+    const useCases: IGameUseCases = {
+        addLetter: addLetterUseCase,
+        removeLetter: removeLetterUseCase,
+        submitWord: submitWordUseCase,
+        resetGame: resetGameUseCase
+    };
+
+    const secretWord = repository.getRandomWord();
+    const game = new Game(secretWord);
+    const controller = new GameController(game, useCases);
+    new InputManager(controller);
+});
