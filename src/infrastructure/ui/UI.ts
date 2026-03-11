@@ -29,7 +29,17 @@ export class UI implements IGameView {
             const button = document.querySelector(
                 `${UI_CONFIG.SELECTORS.VIRTUAL_KEY}[value="${key.toUpperCase()}"]`
             );
-            if (button) this.applyStateClass(button, state);
+            if (!button) return;
+            const classCorrect = UI_CONFIG.CSS_CLASSES[LetterState.CORRECT];
+            const classPresent = UI_CONFIG.CSS_CLASSES[LetterState.PRESENT];
+
+            const isCurrentlyCorrect = button.classList.contains(classCorrect);
+            const isCurrentlyPresent = button.classList.contains(classPresent);
+
+            if (isCurrentlyCorrect) return;
+            if (isCurrentlyPresent && state !== LetterState.CORRECT) return;
+
+            this.applyStateClass(button, state);
         }, delay);
     }
 
