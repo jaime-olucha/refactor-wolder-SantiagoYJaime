@@ -1,20 +1,20 @@
 import { IGamePresenter } from "../application/ports/IGamePresenter.js";
-import { IGameView } from "./ports/IGameView.js";
+import { IGameViews } from "./ports/IGameViews.js";
 import { LetterState, GameState } from "../domain/types/typesState.js";
 
 export class GamePresenter implements IGamePresenter {
-    private readonly _view: IGameView;
+    private readonly _views: IGameViews;
 
-    constructor(view: IGameView) {
-        this._view = view;
+    constructor(views: IGameViews) {
+        this._views = views;
     }
 
     presentLetterAdded(row: number, column: number, letter: string): void {
-        this._view.drawLetter(row, column, letter);
+        this._views.cell.drawLetter(row, column, letter);
     }
 
     presentLetterRemoved(row: number, column: number): void {
-        this._view.deleteLetter(row, column);
+        this._views.cell.deleteLetter(row, column);
     }
 
     presentWordValidated(row: number, states: LetterState[], guess: string): void {
@@ -22,15 +22,15 @@ export class GamePresenter implements IGamePresenter {
     }
 
     presentGameOver(state: GameState, secretWord: string): void {
-        this._view.showGameOver(state, secretWord);
+        this._views.modal.showGameOver(state, secretWord);
     }
 
     presentGameReset(): void {
-        this._view.resetGame();
+        this._views.reset.resetGame();
     }
 
     private presentLetterState(row: number, column: number, state: LetterState, letter: string): void {
-        this._view.changeCellState(row, column, state);
-        this._view.changeKeyState(letter, state, column);
+        this._views.cell.changeCellState(row, column, state);
+        this._views.keyboard.changeKeyState(letter, state, column);
     }
 }
