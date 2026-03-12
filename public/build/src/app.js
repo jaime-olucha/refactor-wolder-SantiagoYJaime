@@ -1,31 +1,38 @@
-import { LocalWordRepository } from "./infrastructure/repositories/LocalWordRepository.js";
-import { UI } from "./infrastructure/ui/UI.js";
-import { GamePresenter } from "./presentation/GamePresenter.js";
+import { Game } from "./domain/entities/Game.js";
 import { WordValidator } from "./domain/services/WordValidator.js";
 import { AddLetterUseCase } from "./application/useCases/AddLetterUseCase.js";
 import { RemoveLetterUseCase } from "./application/useCases/RemoveLetterUseCase.js";
 import { SubmitWordUseCase } from "./application/useCases/SubmitWordUseCase.js";
 import { ResetGameUseCase } from "./application/useCases/ResetGameUseCase.js";
-import { Game } from "./domain/entities/Game.js";
-import { GameController } from "./presentation/GameController.js";
+import { CellManager } from "./infrastructure/ui/components/CellManager.js";
+import { KeyboardManager } from "./infrastructure/ui/components/KeyboardManager.js";
+import { ModalManager } from "./infrastructure/ui/components/ModalManager.js";
+import { UI } from "./infrastructure/ui/UI.js";
 import { InputManager } from "./infrastructure/input/InputManager.js";
+import { LocalWordRepository } from "./infrastructure/repositories/LocalWordRepository.js";
+import { GamePresenter } from "./presentation/GamePresenter.js";
+import { GameController } from "./presentation/GameController.js";
 document.addEventListener('DOMContentLoaded', () => {
-    const repository = new LocalWordRepository();
-    const view = new UI();
-    const presenter = new GamePresenter(view);
-    const validator = new WordValidator();
-    const addLetterUseCase = new AddLetterUseCase(presenter);
-    const removeLetterUseCase = new RemoveLetterUseCase(presenter);
-    const submitWordUseCase = new SubmitWordUseCase(validator, presenter);
-    const resetGameUseCase = new ResetGameUseCase(repository, presenter);
-    const useCases = {
-        addLetter: addLetterUseCase,
-        removeLetter: removeLetterUseCase,
-        submitWord: submitWordUseCase,
-        resetGame: resetGameUseCase
+    const cellManager = new CellManager();
+    const keyboardManager = new KeyboardManager();
+    const modalManager = new ModalManager();
+    const ui = new UI(cellManager, keyboardManager, modalManager);
+    const views = {
+        cell: ui,
+        keyboard: ui,
+        modal: ui,
+        reset: ui
     };
-    const secretWord = repository.getRandomWord();
-    const game = new Game(secretWord);
+    const presenter = new GamePresenter(views);
+    const repository = new LocalWordRepository();
+    const validator = new WordValidator();
+    const useCases = {
+        addLetter: new AddLetterUseCase(presenter),
+        removeLetter: new RemoveLetterUseCase(presenter),
+        submitWord: new SubmitWordUseCase(validator, presenter),
+        resetGame: new ResetGameUseCase(repository, presenter)
+    };
+    const game = new Game(repository.getRandomWord());
     const controller = new GameController(game, useCases);
     new InputManager(controller);
 });
